@@ -6,6 +6,13 @@
 
  指南针是为了让kubeneters掌舵，在容器的海洋中，不迷失方向。
 
+![image](https://user-images.githubusercontent.com/22409551/90589013-9fb44600-e20f-11ea-936c-33a28c58c4ca.png)
+
+![image](https://user-images.githubusercontent.com/22409551/90589114-e73ad200-e20f-11ea-9406-0a61f98b5b7d.png)
+
+![image](https://user-images.githubusercontent.com/22409551/90589174-18b39d80-e210-11ea-8e60-870772c70c2e.png)
+
+
 
 ## 特点
 
