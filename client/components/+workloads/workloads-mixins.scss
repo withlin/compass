@@ -1,0 +1,148 @@
+// Pods
+$pod-status-running-color: $colorOk;
+$pod-status-pending-color: $colorWarning;
+$pod-status-evicted-color: $colorError;
+$pod-status-succeeded-color: $colorSuccess;
+$pod-status-failed-color: $colorError;
+$pod-status-terminated-color: $colorTerminated;
+$pod-status-unknown-color: $colorVague;
+$pod-status-complete-color: $colorSuccess;
+$pod-status-crash-loop-color: $colorError;
+$pod-scheduled: $colorOk;
+$pod-ready: $colorOk;
+$pod-initialized: $colorOk;
+$pod-unschedulable: $colorError;
+$pod-containers-ready: $colorInfo;
+$pod-error: $colorError;
+$pod-container-creating: $colorInfo;
+
+// Deployments
+$deployment-available: $colorOk;
+$deployment-progressing: $colorInfo;
+$deployment-replicafailure: $colorError;
+
+// Jobs
+$job-complete: $colorSuccess;
+$job-failed: $colorError;
+
+// Steps
+$step-waiting: $colorVague;
+$step-running: $colorInfo;
+$step-terminated: $colorOk;
+$step-status-pending-color: $colorWarning;
+
+//TaskRuns
+$taskrun-started: $colorInfo;
+$taskrun-pending: $pod-status-pending-color;
+$taskrun-running: $pod-status-running-color;
+$taskrun-cancelled: $pod-status-evicted-color;
+$taskrun-succeeded: $pod-status-succeeded-color;
+$taskrun-failed: $pod-status-failed-color;
+$taskrun-timeout: $pod-status-crash-loop-color;
+
+// Pod Statuses
+$pod-status-color-list: (
+        running: $pod-status-running-color,
+        pending: $pod-status-pending-color,
+        evicted: $pod-status-evicted-color,
+        waiting: $pod-status-pending-color,
+        succeeded: $pod-status-succeeded-color,
+        failed: $pod-status-failed-color,
+        terminated: $pod-status-terminated-color,
+        completed: $pod-status-complete-color,
+        crash-loop-back-off: $pod-status-crash-loop-color,
+        error: $pod-error,
+        container-creating: $pod-container-creating,
+);
+
+// Job Conditions
+$job-condition-color-list: (
+        complete: $job-complete,
+        failed: $job-failed,
+);
+
+// TaskRun Status
+$step-status-color-list: (
+        waiting: $step-waiting,
+        running: $step-running,
+        terminated: $step-terminated,
+);
+
+// Pipeline-Run ~ Taskruns
+$pipelinerun-taskruns-status-list: (
+        started: $taskrun-started,
+        pending: $taskrun-pending,
+        running: $taskrun-running,
+        cancelled: $taskrun-cancelled,
+        succeeded: $taskrun-succeeded,
+        failed: $taskrun-failed,
+        timeout: $taskrun-timeout,
+);
+
+@mixin pod-status-bgs {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin pod-status-colors {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
+
+@mixin job-condition-bgs {
+  @each $condition, $color in $job-condition-color-list {
+    &.#{$condition} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin job-condition-colors {
+  @each $condition, $color in $job-condition-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}
+
+@mixin step-status-bgs {
+  @each $status, $color in $step-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin step-status-colors {
+  @each $status, $color in $step-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
+
+@mixin taskrun-status-bgs {
+  @each $status, $color in $pipelinerun-taskruns-status-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin taskrun-status-colors {
+  @each $status, $color in $pipelinerun-taskruns-status-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

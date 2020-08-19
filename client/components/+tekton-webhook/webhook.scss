@@ -1,0 +1,19 @@
+.WebHook {
+  .TableCell {
+    &.name {
+      flex-grow: 0.6;
+    }
+
+    &.git {
+      flex-grow: 1;
+    }
+
+    &.uri {
+      flex-grow: 2;
+    }
+
+    &.age {
+      flex-grow: 0.4;
+    }
+  }
+}

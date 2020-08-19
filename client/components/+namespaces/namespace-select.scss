@@ -1,0 +1,27 @@
+@mixin namespaceSelectCommon {
+  .Icon {
+    margin-right: $margin / 2;
+  }
+}
+
+.NamespaceSelect {
+  @include namespaceSelectCommon;
+
+  .Select {
+    //&__control {
+    //  width: 14vw;
+    //  height: 29px;
+    //}
+
+    &__placeholder {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
+.NamespaceSelectMenu {
+  @include namespaceSelectCommon;
+}

@@ -1,0 +1,17 @@
+.PipelineRunVisualDialog {
+  .Wizard {
+    width: 95vw;
+    height: 85vh;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+      background-color: #F0F1F4;
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
+}

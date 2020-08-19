@@ -1,0 +1,16 @@
+.AddRoleDialog {
+  .Wizard {
+    width: 40vw;
+    height: 80vh;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
+}

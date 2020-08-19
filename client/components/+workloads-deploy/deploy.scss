@@ -1,0 +1,11 @@
+.Deploys {
+  .TableCell {
+    &.name {
+      flex-grow: 1.7;
+    }
+
+    &.namespace {
+      flex-grow: 0.3;
+    }
+  }
+}

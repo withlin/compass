@@ -1,0 +1,22 @@
+@mixin nodeSelectCommon {
+  .Icon {
+    margin-right: $margin / 2;
+  }
+}
+
+.NodeSelect {
+  @include nodeSelectCommon;
+
+  .Select {
+    &__placeholder {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
+.NodeSelectMenu {
+  @include nodeSelectCommon;
+}

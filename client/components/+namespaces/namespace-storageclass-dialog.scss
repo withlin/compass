@@ -1,0 +1,11 @@
+.NamespaceStorageClasslimit {
+  .status {
+    @include namespaceStatus;
+  }
+
+  .quotas {
+    .value a {
+      margin-right: $margin;
+    }
+  }
+}

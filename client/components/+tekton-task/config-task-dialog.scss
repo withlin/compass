@@ -1,0 +1,31 @@
+.ConfigTaskDialog {
+
+  .MuiExpansionPanelDetails {
+    .root {
+      display: grid;
+    }
+  }
+
+  .MuiPaper {
+    .root {
+      color: unset !important;
+    }
+  }
+
+  .Wizard {
+    width: 50vw;
+    height: 85vh;
+  }
+
+  .WizardStep {
+
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
+
+}

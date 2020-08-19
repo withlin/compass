@@ -1,0 +1,18 @@
+.PipelineIcon {
+  &.warning {
+    color: $golden;
+  }
+}
+
+.PiplineRunTooltip {
+  white-space: normal;
+
+  .age {
+    margin-top: $margin;
+
+    .Icon {
+      margin-right: $margin;
+    }
+  }
+}
+  

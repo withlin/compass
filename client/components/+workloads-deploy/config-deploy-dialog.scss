@@ -1,0 +1,12 @@
+.Wizard {
+  height: 90vh;
+  width: 50vw;
+}
+
+.Wizard .WizardStep > .step-content.scrollable {
+  overflow: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+  padding: var(--wizard-spacing);
+  height: var(--wizard-content-height);
+  max-height: var(--wizard-content-max-height);
+}

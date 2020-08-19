@@ -1,0 +1,32 @@
+.PodLogsDialog {
+  .Wizard {
+    width: 90vw;
+    height: 85vh;
+  }
+}
+
+.pipeline-run-logs-area {
+  position: relative;
+  @include custom-scrollbar;
+
+  // fix for `this.logsArea.scrollTop = this.logsArea.scrollHeight`
+  // `overflow: overlay` don't allow scroll to the last line
+  overflow: auto;
+
+  color: #c5c8c6;
+  background: #232e43;
+  line-height: var(--log-line-height);
+  border-radius: 2px;
+  padding: $padding / 4 $padding;
+  font-family: $font-monospace;
+  font-size: smaller;
+  white-space: pre;
+
+  .no-logs {
+    text-align: center;
+  }
+}
+
+.pipeline-run-steps {
+  height: auto;
+}

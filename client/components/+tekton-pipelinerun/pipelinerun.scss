@@ -1,0 +1,89 @@
+.PipelineRuns {
+  .TableCell {
+    &.name {
+      flex-grow: 2;
+    }
+    &.ownernamespace {
+      flex-grow: 1;
+    }
+
+    &.event {
+      flex-grow: 0.15;
+
+      .KubeEventIcon.warning {
+        color: $colorError;
+      }
+    }
+
+    &.reason {
+      flex-grow: 0.15;
+    }
+
+    &.tasks {
+      .StatusBrick {
+        @include taskrun-status-bgs;
+      }
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.status{
+      flex-grow: 0.25;
+    }
+  }
+}
+
+.pipelineRunWarningIcon {
+  color: $golden;
+}
+
+.pipelineRun-Succeeded {
+  color: #20d867;
+}
+
+.pipelineRun-Cancelled {
+  color: cornflowerblue;
+}
+
+.pipelineRun-Failed {
+  color: red;
+}
+
+@-webkit-keyframes pipelineRun-Running /* Safari and Chrome */ {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes pipelineRun-Running {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.pipelineRun-Running {
+  -webkit-animation: pipelineRun-Running 700ms linear infinite;
+  -moz-animation: pipelineRun-Running 700ms linear infinite;
+  -ms-animation: pipelineRun-Running 700ms linear infinite;
+  -o-animation: pipelineRun-Running 700ms linear infinite;
+  animation: pipelineRun-Running 700ms linear infinite;
+  color: deepskyblue;
+}

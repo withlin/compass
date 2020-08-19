@@ -1,0 +1,19 @@
+.Stones {
+  .TableCell {
+    &.name {
+      flex-grow: 1;
+    }
+
+    &.pods {
+      flex-grow: 1;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}
+
+.StoneWarningIcon {
+  color: $golden;
+}

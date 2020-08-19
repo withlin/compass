@@ -1,0 +1,22 @@
+@mixin namespaceSelectCommon {
+  .Icon {
+    margin-right: $margin / 2;
+  }
+}
+
+.NamespaceAllowStorageClassSelect {
+  @include namespaceSelectCommon;
+
+  .Select {
+    &__placeholder {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
+.NamespaceAllowStorageClassSelectMenu {
+  @include namespaceSelectCommon;
+}

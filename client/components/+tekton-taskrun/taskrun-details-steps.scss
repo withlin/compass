@@ -1,0 +1,8 @@
+@import "../+workloads/workloads-mixins";
+
+.TaskRunDetailsSteps {
+
+  .StatusBrick {
+    @include step-status-bgs;
+  }
+}
