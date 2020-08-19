@@ -29,7 +29,7 @@ import {
 } from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
-import { namespace } from "store";
+import { OwnerReferences } from '../../api/kube-object'
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -159,10 +159,24 @@ export class PipelineRunDialog extends React.Component<Props> {
         },
       };
 
-      await pipelineRunApi.create(
+
+
+      let resultObject: any = await pipelineRunApi.create(
         { name: this.value.name, namespace: this.pipeline.getNs() },
         { ...pipelineRun }
       );
+      const currentPipelineRun = resultObject["Object"] as PipelineRun
+      const ownerReferences: OwnerReferences = {
+        apiVersion: currentPipelineRun.metadata.resourceVersion,
+        kind: currentPipelineRun.kind,
+        name: this.pipeline.metadata.name,
+        uid: currentPipelineRun.metadata.uid,
+        controller: false,
+        blockOwnerDeletion: false,
+      }
+      graph.addOwnerReferences([ownerReferences]);
+      await tektonGraphStore.update(graph, { ...graph })
+
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {
