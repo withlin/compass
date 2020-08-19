@@ -4,7 +4,7 @@
 
 ##  `compass`简介
 
- 指南针是为了让kubeneters掌舵，在容器的海洋中，不迷失方向。
+ 指南针是为了给kubeneters指明方向，在容器的海洋中，不迷失方向。
 
 ![image](https://user-images.githubusercontent.com/22409551/90589013-9fb44600-e20f-11ea-936c-33a28c58c4ca.png)
 
