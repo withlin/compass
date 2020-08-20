@@ -16,6 +16,7 @@ import { pipelineStore } from "./pipeline.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 import { defaultInitConfig } from "../+tekton-graph/common";
 import { graphAnnotationKey } from '../+constant/tekton-constants'
+import { OwnerReferences } from '../../api/kube-object'
 
 const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
 const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
@@ -162,6 +163,11 @@ export class PipelineVisualDialog extends React.Component<Props> {
   updateTektonGraph = async (data: string) => {
     const graphName =
       this.pipeline.getName() + "-" + new Date().getTime().toString();
+
+
+
+
+
     const tektonGraph: Partial<TektonGraph> = {
       metadata: {
         name: graphName,
@@ -184,6 +190,19 @@ export class PipelineVisualDialog extends React.Component<Props> {
       { namespace: this.pipeline.getNs(), name: graphName },
       { ...tektonGraph }
     );
+
+    const ownerReferences: OwnerReferences = {
+      apiVersion: this.pipeline.getResourceVersion(),
+      kind: this.pipeline.kind,
+      name: this.pipeline.getName(),
+      uid: this.pipeline.getId(),
+      controller: false,
+      blockOwnerDeletion: false,
+    }
+    newTektonGraph.addOwnerReferences([ownerReferences]);
+    await tektonGraphStore.update(newTektonGraph, { ...newTektonGraph })
+
+
 
     this.pipeline.addAnnotation(
       graphAnnotationKey,

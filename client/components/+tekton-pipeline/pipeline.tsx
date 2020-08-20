@@ -35,6 +35,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { stopPropagation } from "../../utils";
 import { AddTektonStoreDialog, PipelineEntity } from "../+tekton-store";
 import { TektonGraph } from "../../api/endpoints/tekton-graph.api";
+import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
 
 enum sortBy {
   name = "name",
@@ -78,7 +79,7 @@ export class Pipelines extends React.Component<Props> {
           isClusterScoped
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[taskStore, pipelineResourceStore, tektonGraphStore]} // other
+          dependentStores={[taskStore, pipelineRunStore, pipelineResourceStore, tektonGraphStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.namespace]: (pipeline: Pipeline) => pipeline.getNs(),
