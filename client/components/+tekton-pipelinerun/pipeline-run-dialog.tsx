@@ -30,6 +30,7 @@ import {
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 import { OwnerReferences } from '../../api/kube-object'
+import { runGraphAnnotationKey } from '../+constant/tekton-constants'
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -148,7 +149,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
+          annotations: Object.fromEntries(new Map<string, string>().set(runGraphAnnotationKey, graph.getName())),
         } as IKubeObjectMetadata,
         spec: {
           resources: this.value.resources,
@@ -165,6 +166,7 @@ export class PipelineRunDialog extends React.Component<Props> {
         { name: this.value.name, namespace: this.pipeline.getNs() },
         { ...pipelineRun }
       );
+
       const currentPipelineRun = resultObject["Object"] as PipelineRun
       const ownerReferences: OwnerReferences = {
         apiVersion: currentPipelineRun.metadata.resourceVersion,
