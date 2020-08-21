@@ -34,6 +34,8 @@ kubectl apply -f https://raw.githubusercontent.com/yametech/compass/master/kuber
 //找compass的svc。以nodeport的方式暴露
 kubectl  get svc  -n kube-system
 
+//账户密码
+admin/admin
 ```
 
 
