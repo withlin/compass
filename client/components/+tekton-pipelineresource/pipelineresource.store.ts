@@ -6,6 +6,13 @@ import { apiManager } from "../../api/api-manager";
 @autobind()
 export class PipelineResourceStore extends KubeObjectStore<PipelineResource> {
   api = pipelineResourceApi;
+
+  getStatuses(PipelineResources: PipelineResource[]) {
+    const status = {
+      sum: PipelineResources.length,
+    };
+    return status;
+  }
 }
 
 export const pipelineResourceStore = new PipelineResourceStore();

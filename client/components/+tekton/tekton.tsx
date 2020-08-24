@@ -8,6 +8,7 @@ import { Pipelines } from "../+tekton-pipeline";
 import { PipelineRuns } from "../+tekton-pipelinerun";
 import { PipelineResources } from "../+tekton-pipelineresource";
 import { WebHook } from "../+tekton-webhook";
+import { TektonsOverview } from "../+tekton-overview/tekton-overview"
 import {
   pipelineURL,
   pipelineRoute,
@@ -25,18 +26,26 @@ import {
   tektonStoreURL,
   webHookURL,
   webHookRoute,
+  tektonsURL,
+  tektonsRoute
 } from "./tekton.route";
 import { Tasks } from "../+tekton-task";
 import { TaskRuns } from "../+tekton-taskrun";
 import { OpsSecrets } from "../+tekton-ops-secret";
 import { TektonStoreLayout } from "../+tekton-store";
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 export class Tekton extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
     return [
+      {
+        title: <Trans>Overview</Trans>,
+        component: TektonsOverview,
+        url: tektonsURL({ query }),
+        path: tektonsRoute.path,
+      },
       {
         title: <Trans>Pipeline</Trans>,
         component: Pipelines,

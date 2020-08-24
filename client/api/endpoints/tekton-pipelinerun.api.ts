@@ -89,6 +89,16 @@ export interface WorkspaceBinding {
   secret?: any;
 }
 
+export enum PipelineRunStatusReason {
+  Completed = "Completed",
+  Succeeded = "Succeeded",
+  Pending = "Pending",
+  Failed = "Failed",
+  Running = "Running",
+  PipelineRunCancelled = "PipelineRunCancelled",
+  Timeout = "Timeout",
+}
+
 export interface TaskRunsReport {
   status: {
     conditions: { status: string; reason: string; message: string }[];
@@ -178,6 +188,13 @@ export class PipelineRun extends KubeObject {
       return advanceFormatDuration(diff, compact);
     }
     return diff;
+  }
+
+  getStatus(): string {
+    const conditions = this?.status?.conditions;
+    if (conditions === undefined) return "";
+    if (conditions[0].reason == undefined) return "";
+    return conditions[0].reason;
   }
 
   getDuration(humanize = true, compact = true) {
