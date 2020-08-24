@@ -20,7 +20,7 @@
 
 ![image](https://user-images.githubusercontent.com/22409551/90589114-e73ad200-e20f-11ea-9406-0a61f98b5b7d.png)
 
-## 特点
+## Feature
 
 
 - Support multi-tenant management and authority management
