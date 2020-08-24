@@ -1,4 +1,4 @@
-# compass  [English](README.md)
+# compass  |[English](README.md)
 ![compass](https://github.com/yametech/compass/workflows/compass/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://github.com/yametech/compass/blob/master/LICENSE)
 
