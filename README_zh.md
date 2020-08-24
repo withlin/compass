@@ -1,10 +1,10 @@
-# compass [中文](README_zh.md)
+# compass  [English](README.md)
 ![compass](https://github.com/yametech/compass/workflows/compass/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://github.com/yametech/compass/blob/master/LICENSE)
 
-##  Why Compass
+##  `compass`简介
 
-  The compass is to specify the direction for kubeneters so that they don’t lose their way in the ocean of containers.
+ 指南针是为了给kubeneters指明方向，在容器的海洋中，不迷失方向。
 
 ![image](https://user-images.githubusercontent.com/22409551/90589013-9fb44600-e20f-11ea-936c-33a28c58c4ca.png)
 
@@ -20,38 +20,35 @@
 
 ![image](https://user-images.githubusercontent.com/22409551/90589114-e73ad200-e20f-11ea-9406-0a61f98b5b7d.png)
 
+
 ## 特点
 
+- 支持多租户管理与权限管理
+- 支持基于tekton的cicd
+- 支持多机房的发布，原地升级应用，蓝绿发布，金丝雀发布，分组发布等
+- 支持webshell进入容器并且还具有Debug功能
+- 支持集群，节点，应用的各类指标的监控
+- 支持针对租户划分网络，qos，子网的划分。
+- 支持ovn管理
 
-- Support multi-tenant management and authority management
-- Support CICD  base [tektoncd](https://github.com/tektoncd/pipeline)
-- Support multi zone deployment, in-place upgrade application, blue-green release, canary release, group release, etc.
-- Support webshell to enter the container and also has Debug Pod.
-- Supports monitoring of various indicators of clusters, nodes, and applications
-- Support the division of networks, qos, and subnets for tenants.
-- Support ovn management
 
-
-## Install 
+## 安装
 
 ```shell
 
 kubectl apply -f https://raw.githubusercontent.com/yametech/compass/master/kubernetes/release.yml
 
-//find compass svc
+//找compass的svc。以nodeport的方式暴露
 kubectl  get svc  -n kube-system
 
-//user/password
+//账户密码
 admin/admin
 ```
 
 
-## Dev
+## 开发
 
-#### Require 
-
-Nodejs >= 14.x
-
+`Nodejs版本要求14.x`
 
 ``` js
 
@@ -60,7 +57,7 @@ yarn install && yarn dev
 
 ```
 
-## Build  Image
+## 镜像打包
 
 ``` shell
 
@@ -69,6 +66,6 @@ make
 ```
 
 
-## Thanks
+## 感谢
 
 [lens](https://github.com/lensapp/lens)
