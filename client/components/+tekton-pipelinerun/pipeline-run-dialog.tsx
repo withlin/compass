@@ -68,11 +68,11 @@ export class PipelineRunDialog extends React.Component<Props> {
   @observable static pipelineData: Pipeline = null;
   @observable graph: any = null;
   // @observable nameSpace: string = "";
-  // @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
+  @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
 
-  @computed get value(): PipelineRunResult {
-    return this.props.value || pipelineRunResult;
-  }
+  // @computed get value(): PipelineRunResult {
+  //   return this.props.value || pipelineRunResult;
+  // }
 
   static open(pipeline: Pipeline) {
     PipelineRunDialog.isOpen = true;
