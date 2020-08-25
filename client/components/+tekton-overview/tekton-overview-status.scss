@@ -3,7 +3,7 @@
   --tekton-status-pending: #{$pod-status-pending-color};
   --tekton-status-succeeded: #{$pod-status-succeeded-color};
   --tekton-status-failed: #{$pod-status-failed-color};
-  --tekton-status-sum: #8b3df2;
+  --tekton-status-sum: #a336a7;
 
   .PieChart {
     .chart-container {

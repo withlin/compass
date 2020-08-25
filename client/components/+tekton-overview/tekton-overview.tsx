@@ -12,6 +12,7 @@ import { taskStore } from "../+tekton-task/task.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { Spinner } from "../spinner";
+import { PipelineRunTopTable } from "../+tekton-pipelinerun/pipeline-run-top-table"
 
 interface Props extends RouteComponentProps<ITektonsOverviewRouteParams> {
 }
@@ -48,6 +49,12 @@ export class TektonsOverview extends React.Component<Props> {
         return (
             <>
                 <OverviewStatuses />
+                <PipelineRunTopTable
+                    compact
+                    hideFilters
+                    className="box grow"
+
+                />
             </>
         )
     }
