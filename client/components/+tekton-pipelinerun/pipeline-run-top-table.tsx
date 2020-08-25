@@ -35,19 +35,6 @@ export class PipelineRunTopTable extends React.Component<Props> {
                 className={cssNames("pipelineRuns", className, { compact })}
                 store={pipelineRunStore}
                 isSelectable={false}
-                // sortingCallbacks={{
-                //     [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
-                //     [sortBy.type]: (pipelineRun: PipelineRun) => pipelineRun.involvedObject.kind,
-                //     [sortBy.object]: (pipelineRun: PipelineRun) => pipelineRun.involvedObject.name,
-                //     [sortBy.count]: (pipelineRun: PipelineRun) => pipelineRun.count,
-                //     [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
-                // }}
-                // searchFilters={[
-                //     (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
-                //     (pipelineRun: PipelineRun) => pipelineRun.message,
-                //     (pipelineRun: PipelineRun) => pipelineRun.getSource(),
-                //     (pipelineRun: PipelineRun) => pipelineRun.involvedObject.name,
-                // ]}
                 renderHeaderTitle={<Trans>Top Duration</Trans>}
                 customizeHeader={({ title, info }) => (
                     compact ? title : ({
