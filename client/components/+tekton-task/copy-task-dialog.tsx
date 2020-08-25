@@ -12,7 +12,7 @@ import {
   resources,
   TaskSpecWorkSpaces,
 } from "../+tekton-common";
-import { computed, observable, toJS } from "mobx";
+import { observable, toJS } from "mobx";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Trans } from "@lingui/macro";
@@ -34,6 +34,7 @@ import { Collapse } from "../collapse";
 import { PipelineGraph } from "../+tekton-graph/graph-new";
 import { INode } from "@antv/g6/lib/interface/item";
 import { taskName } from "../+constant";
+import { taskApi } from "../../api/endpoints";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -158,7 +159,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         CopyTaskDialog.namespace
       );
       if (task === undefined) {
-        taskStore.create(
+        await taskApi.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
@@ -184,7 +185,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
           task.spec.steps = steps;
-          taskStore.apply(task, { ...task });
+          await taskStore.apply(task, { ...task });
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
