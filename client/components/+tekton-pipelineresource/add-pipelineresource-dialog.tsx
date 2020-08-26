@@ -7,7 +7,6 @@ import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { pipelineResourceApi, storageClassApi } from "../../api/endpoints";
@@ -15,8 +14,9 @@ import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { Params } from "../+tekton-common";
-import { ParamsDetails } from "../+tekton-common";
 import { configStore } from "../../config.store";
+import { Trans } from "@lingui/macro";
+import { PipelineResourceParamsDetails } from "./pipelineresource-params-details"
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -93,6 +93,19 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
     }
   };
 
+  add = () => {
+    this.params.push({
+      name: "",
+      value: "",
+    });
+  };
+
+  remove = (index: number) => {
+    this.params.splice(index, 1);
+  };
+
+
+
   render() {
     const header = (
       <h5>
@@ -125,11 +138,12 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
               value={this.type}
               onChange={(value) => (this.type = value.value)}
             />
-            <br/>
-            <ParamsDetails
+            <br />
+
+            <PipelineResourceParamsDetails
               value={this.params}
-              onChange={(value) => (this.params = value)}
             />
+
           </WizardStep>
         </Wizard>
       </Dialog>
