@@ -94,8 +94,7 @@ export class AddSecretDialog extends React.Component<Props> {
     },
     [SecretType.SSHAuth]: {
       data: [
-        { key: "username", value: "", required: true },
-        { key: "password", value: "", required: true }
+        { key: "ssh-privatekey", value: "", required: true },
       ]
     },
   }
@@ -329,6 +328,12 @@ export class AddSecretDialog extends React.Component<Props> {
     )
   }
 
+  isOpsSecretOperator() {
+    if (!this.isOpsSecret) {
+      this.renderFields("data")
+    }
+  }
+
   render() {
     const { ...dialogProps } = this.props;
     const { namespace, name, type } = this;
@@ -393,7 +398,7 @@ export class AddSecretDialog extends React.Component<Props> {
             {this.renderFields("annotations")}
             {this.renderFields("labels")}
             {!this.isOpsSecret ?
-              this.type == SecretType.DockerConfigJson ? this.renderDockerConfigFields() : this.renderFields("data") : null}
+              this.type == SecretType.DockerConfigJson ? this.renderDockerConfigFields() : this.isOpsSecretOperator() : null}
             {this.isOpsSecret ? this.renderData("data") : null}
           </WizardStep>
         </Wizard>
