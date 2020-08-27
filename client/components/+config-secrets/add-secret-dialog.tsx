@@ -296,7 +296,6 @@ export class AddSecretDialog extends React.Component<Props> {
 
   renderData = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
-    console.log(field)
     return (
       <div className="secret-fields">
 
