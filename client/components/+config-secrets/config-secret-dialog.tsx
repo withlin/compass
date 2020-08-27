@@ -99,8 +99,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
     },
     [SecretType.SSHAuth]: {
       data: [
-        { key: "username", value: "", required: true },
-        { key: "password", value: "", required: true }
+        { key: "ssh-privatekey", value: "", required: true },
       ]
     },
   }
