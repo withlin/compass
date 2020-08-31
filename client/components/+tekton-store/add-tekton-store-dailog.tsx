@@ -13,8 +13,16 @@ import { Notifications } from "../notifications";
 import { tektonStore } from "./taskstore.store";
 import { tektonStoreNamespace } from "../+constant";
 import store from "store";
+import {
+  tektonStoreApi,
+  TektonStore,
+  Task,
+  Pipeline,
+  PipelineTask,
+  TaskRef,
+} from "../../api/endpoints";
 
-interface Props extends DialogProps {}
+interface Props extends DialogProps { }
 
 export interface PipelineEntity {
   pipelineData: string;
@@ -27,23 +35,39 @@ export enum ResourceType {
   Pipeline = "pipeline",
 }
 
+
 @observer
 export class AddTektonStoreDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static tektonResourceType: string = "";
   @observable static data: string = "";
   @observable static author: string = "";
-  @observable name: string = "";
-  @observable forks: number = 0;
-  @observable paramsDescription = "";
+  @observable static storeName: string = "";
+  @observable static forks: number = 0;
+  @observable static paramsDescription = "";
+  @observable static tektonStore: TektonStore
 
-  static open(data: string, resourceType: string) {
+  static open(data: string = "", resourceType: string = "", tektonStore: TektonStore = null) {
+
     AddTektonStoreDialog.isOpen = true;
-    this.data = data;
-    this.tektonResourceType = resourceType;
+    if (tektonStore !== null || tektonStore !== undefined) {
+      // this.tektonStore = tektonStore;
+      AddTektonStoreDialog.data = tektonStore.getData();
+      AddTektonStoreDialog.tektonResourceType = tektonStore.getType();
+      this.storeName = tektonStore.getName();
+      this.forks = tektonStore.getForks();
+      this.paramsDescription = tektonStore.getParamsDescription();
+    } else {
+      this.data = data;
+      this.tektonResourceType = resourceType;
+    }
+
     const userConfig = store.get("u_config");
     this.author = userConfig ? userConfig.userName : "";
+
   }
+
+
 
   static close() {
     AddTektonStoreDialog.isOpen = false;
@@ -59,31 +83,45 @@ export class AddTektonStoreDialog extends React.Component<Props> {
   };
 
   reset() {
-    this.name = "";
-    this.forks = 0;
-    this.paramsDescription = "";
+    AddTektonStoreDialog.storeName = "";
+    AddTektonStoreDialog.forks = 0;
+    AddTektonStoreDialog.paramsDescription = "";
   }
 
-  addTektonStore = () => {
+  addTektonStore = async () => {
     try {
       const resourceType: string = AddTektonStoreDialog.tektonResourceType;
       const data: string = AddTektonStoreDialog.data;
       const author: string = AddTektonStoreDialog.author;
-      tektonStore.create(
-        {
-          name: this.name,
-          namespace: tektonStoreNamespace,
-        },
-        {
-          spec: {
-            tektonResourceType: resourceType,
-            data: data,
-            author: author,
-            forks: this.forks,
-            paramsDescription: this.paramsDescription,
+      const currentTaskStore = await tektonStore.getByName(AddTektonStoreDialog.storeName)
+      if (currentTaskStore === undefined) {
+        console.log(currentTaskStore)
+        await tektonStore.create(
+          {
+            name: AddTektonStoreDialog.storeName,
+            namespace: tektonStoreNamespace,
           },
-        }
-      );
+          {
+            spec: {
+              tektonResourceType: resourceType,
+              data: data,
+              author: author,
+              forks: AddTektonStoreDialog.forks,
+              paramsDescription: AddTektonStoreDialog.paramsDescription,
+            },
+          }
+        );
+      } else {
+        // currentTaskStore.metadata.name = AddTektonStoreDialog.name;
+
+        currentTaskStore.spec.author = AddTektonStoreDialog.author;
+        currentTaskStore.spec.forks = AddTektonStoreDialog.forks;
+        currentTaskStore.spec.data = data;
+        currentTaskStore.spec.tektonResourceType = resourceType;
+        currentTaskStore.spec.paramsDescription = AddTektonStoreDialog.paramsDescription;
+        await tektonStore.update(currentTaskStore, { ...currentTaskStore })
+      }
+
       Notifications.ok(<>Add TektonStore {name} succeeded</>);
       this.reset();
       this.close();
@@ -119,8 +157,8 @@ export class AddTektonStoreDialog extends React.Component<Props> {
             <SubTitle title={<Trans>Name</Trans>} />
             <Input
               placeholder={_i18n._(t`Name`)}
-              value={this.name}
-              onChange={(value) => (this.name = value)}
+              value={AddTektonStoreDialog.storeName}
+              onChange={(value) => (AddTektonStoreDialog.storeName = value)}
             />
             <SubTitle title={<Trans>Author</Trans>} />
             <Input
@@ -132,16 +170,16 @@ export class AddTektonStoreDialog extends React.Component<Props> {
             <Input
               disabled={true}
               placeholder={_i18n._(t`Forks`)}
-              value={String(this.forks)}
-              onChange={(value) => (this.forks = Number(value))}
+              value={String(AddTektonStoreDialog.forks)}
+              onChange={(value) => (AddTektonStoreDialog.forks = Number(value))}
             />
             <SubTitle title={<Trans>ParamsDescription</Trans>} />
             <Input
               multiLine={true}
               maxRows={10}
               placeholder={_i18n._(t`ParamsDescription`)}
-              value={this.paramsDescription}
-              onChange={(value) => (this.paramsDescription = value)}
+              value={AddTektonStoreDialog.paramsDescription}
+              onChange={(value) => (AddTektonStoreDialog.paramsDescription = value)}
             />
             {/* <SubTitle title={<Trans>Subreference</Trans>} />
             <Input
