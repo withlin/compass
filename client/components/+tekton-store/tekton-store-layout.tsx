@@ -28,8 +28,10 @@ import {
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "client/api/kube-object";
 import { graphAnnotationKey } from '../+constant/tekton-constants'
-import { task } from "../+tekton-task/config-task-dialog";
-
+import { Link } from "react-router-dom";
+import { stopPropagation } from "../../utils";
+import Tooltip from "@material-ui/core/Tooltip";
+import { AddTektonStoreDialog } from "../+tekton-store";
 enum sortBy {
   name = "name",
   namespace = "namespace",
@@ -40,60 +42,83 @@ interface Props extends RouteComponentProps { }
 
 @observer
 export class TektonStoreLayout extends React.Component<Props> {
+
+  renderTektonStoreName(tektonStore: TektonStore) {
+    const name = tektonStore.getName();
+
+    return (
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          AddTektonStoreDialog.open("", "", tektonStore);
+        }}
+        to={null}
+      >
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
+
   render() {
     return (
-      <KubeObjectListLayout
-        isClusterScoped
-        className="TektonStores"
-        store={tektonStore}
-        dependentStores={[taskStore, pipelineStore, tektonGraphStore]} // other
-        sortingCallbacks={{
-          [sortBy.name]: (tektonStore: TektonStore) => tektonStore.getName(),
-          [sortBy.namespace]: (tektonStore: TektonStore) => tektonStore.getNs(),
-          [sortBy.age]: (tektonStore: TektonStore) => tektonStore.getAge(false),
-        }}
-        searchFilters={[
-          (tektonStore: TektonStore) => tektonStore.getSearchFields(),
-        ]}
-        renderHeaderTitle={<Trans>TektonStore</Trans>}
-        renderTableHeader={[
-          {
-            title: <Trans>Name</Trans>,
-            className: "name",
-            sortBy: sortBy.name,
-          },
-          {
-            title: <Trans>Namespace</Trans>,
-            className: "namespace",
-            sortBy: sortBy.namespace,
-          },
-          {
-            title: <Trans>Type</Trans>,
-            className: "type",
-          },
-          {
-            title: <Trans>Author</Trans>,
-            className: "author",
-          },
-          {
-            title: <Trans>Forks</Trans>,
-            className: "forks",
-          },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-        ]}
-        renderTableContents={(tektonStore: TektonStore) => [
-          tektonStore.getName(),
-          tektonStore.getNs(),
-          tektonStore.getType(),
-          tektonStore.getAuthor(),
-          tektonStore.getForks(),
-          tektonStore.getAge(),
-        ]}
-        renderItemMenu={(item: TektonStore) => {
-          return <TektonStoreMenu object={item} />;
-        }}
-      />
+      <>
+        <KubeObjectListLayout
+          isClusterScoped
+          className="TektonStores"
+          store={tektonStore}
+          dependentStores={[taskStore, pipelineStore, tektonGraphStore]} // other
+          sortingCallbacks={{
+            [sortBy.name]: (tektonStore: TektonStore) => tektonStore.getName(),
+            [sortBy.namespace]: (tektonStore: TektonStore) => tektonStore.getNs(),
+            [sortBy.age]: (tektonStore: TektonStore) => tektonStore.getAge(false),
+          }}
+          searchFilters={[
+            (tektonStore: TektonStore) => tektonStore.getSearchFields(),
+          ]}
+          renderHeaderTitle={<Trans>TektonStore</Trans>}
+          renderTableHeader={[
+            {
+              title: <Trans>Name</Trans>,
+              className: "name",
+              sortBy: sortBy.name,
+            },
+            {
+              title: <Trans>Namespace</Trans>,
+              className: "namespace",
+              sortBy: sortBy.namespace,
+            },
+            {
+              title: <Trans>Type</Trans>,
+              className: "type",
+            },
+            {
+              title: <Trans>Author</Trans>,
+              className: "author",
+            },
+            {
+              title: <Trans>Forks</Trans>,
+              className: "forks",
+            },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          ]}
+          renderTableContents={(tektonStore: TektonStore) => [
+            this.renderTektonStoreName(tektonStore),
+            tektonStore.getNs(),
+            tektonStore.getType(),
+            tektonStore.getAuthor(),
+            tektonStore.getForks(),
+            tektonStore.getAge(),
+          ]}
+          renderItemMenu={(item: TektonStore) => {
+            return <TektonStoreMenu object={item} />;
+          }}
+        />
+        <AddTektonStoreDialog />
+      </>
     );
+
   }
 }
 
