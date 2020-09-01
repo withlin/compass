@@ -185,7 +185,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
           task.spec.steps = steps;
-          await taskStore.apply(task, { ...task });
+          await taskStore.update(task, { ...task });
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
