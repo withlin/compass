@@ -125,6 +125,7 @@ export class TektonStoreLayout extends React.Component<Props> {
 export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
   const { object, toolbar } = props;
   const createTaskResource = (taskData: Task) => {
+
     const taskName = taskData.metadata.name;
     try {
       taskStore.create(
@@ -288,6 +289,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
 
             if (resourceType === ResourceType.Task) {
               const taskData: Task = JSON.parse(data);
+              taskData.metadata.name = taskData.metadata.name + "-" + new Date().getTime().toString();
               createTaskResource(taskData);
             }
 

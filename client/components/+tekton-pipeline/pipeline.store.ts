@@ -15,6 +15,7 @@ export class PipelineStore extends KubeObjectStore<Pipeline> {
   api = pipelineApi;
 
   getNodeData(pipeline: Pipeline) {
+    //TODO hard code needs fix
     const graphName = pipeline.getValueFromAnnotations(
       "fuxi.nip.io/tektongraphs"
     );
