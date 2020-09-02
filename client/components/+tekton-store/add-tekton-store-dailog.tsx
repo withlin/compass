@@ -50,8 +50,7 @@ export class AddTektonStoreDialog extends React.Component<Props> {
   static open(data: string = "", resourceType: string = "", tektonStore: TektonStore = null) {
 
     AddTektonStoreDialog.isOpen = true;
-    if (tektonStore !== null || tektonStore !== undefined) {
-      // this.tektonStore = tektonStore;
+    if (tektonStore !== null) {
       AddTektonStoreDialog.data = tektonStore.getData();
       AddTektonStoreDialog.tektonResourceType = tektonStore.getType();
       this.storeName = tektonStore.getName();
@@ -112,8 +111,6 @@ export class AddTektonStoreDialog extends React.Component<Props> {
           }
         );
       } else {
-        // currentTaskStore.metadata.name = AddTektonStoreDialog.name;
-
         currentTaskStore.spec.author = AddTektonStoreDialog.author;
         currentTaskStore.spec.forks = AddTektonStoreDialog.forks;
         currentTaskStore.spec.data = data;
@@ -170,7 +167,7 @@ export class AddTektonStoreDialog extends React.Component<Props> {
             <Input
               disabled={true}
               placeholder={_i18n._(t`Forks`)}
-              value={String(AddTektonStoreDialog.forks)}
+              value={AddTektonStoreDialog?.forks?.toString() ?? "0"}
               onChange={(value) => (AddTektonStoreDialog.forks = Number(value))}
             />
             <SubTitle title={<Trans>ParamsDescription</Trans>} />

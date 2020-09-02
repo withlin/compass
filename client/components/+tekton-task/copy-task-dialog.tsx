@@ -146,6 +146,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     const steps = toJS(this.value.taskSteps);
     const workspaces = toJS(this.value.workspace);
 
+    //TODO: meeds move volumes
     const volumes = [
       {
         name: "build-path",
