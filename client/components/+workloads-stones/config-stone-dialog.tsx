@@ -1,19 +1,19 @@
 import "./config-stone-dialog.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {Stone} from "../../api/endpoints";
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {Notifications} from "../notifications";
-import {Select} from "../select";
-import {stoneStore} from "./stones.store";
-import {Input} from "../input";
-import {isNumber} from "../input/input.validators";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Stone } from "../../api/endpoints";
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { Notifications } from "../notifications";
+import { Select } from "../select";
+import { stoneStore } from "./stones.store";
+import { Input } from "../input";
+import { isNumber } from "../input/input.validators";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -54,7 +54,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
       this.stone.spec.strategy = this.strategy;
       this.stone.spec.coordinates = this.coordinates;
       this.stone.spec.template.spec.containers = this.containers;
-      await stoneStore.update(this.stone, {...this.stone})
+      await stoneStore.update(this.stone, { ...this.stone })
       Notifications.ok(
         <>Stone {this.stone.getName()} save succeeded</>
       );
@@ -98,7 +98,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Update Stone</Trans></h5>;
     return (
       <Dialog
@@ -110,7 +110,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Config Stone</Trans>} next={this.updateStone}>
-            <SubTitle title={<Trans>Strategy</Trans>}/>
+            <SubTitle title={<Trans>Strategy</Trans>} />
             <Select
               value={this.strategy}
               options={this.options}
@@ -118,11 +118,11 @@ export class ConfigStoneDialog extends React.Component<Props> {
               className="box grow"
               onChange={value => this.strategy = value.value}
             />
-            <br/>
-            {this.containers.map((item, index) => {
+            <br />
+            {this?.containers?.map((item, index) => {
               return (
                 <>
-                  <SubTitle title={_i18n._(t`Image`) + '-' + index}/>
+                  <SubTitle title={_i18n._(t`Image`) + '-' + index} />
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Images`)}
@@ -133,11 +133,11 @@ export class ConfigStoneDialog extends React.Component<Props> {
               )
             })}
 
-            <br/>
-            {this.coordinates.map((item, index) => {
+            <br />
+            {this?.coordinates?.map((item, index) => {
               return (
                 <>
-                  <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group}/>
+                  <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group} />
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Replicas`)}
