@@ -4,7 +4,7 @@ export interface Backend {
 }
 
 export interface Path {
-  path: string,
+  path?: string,
   backend: Backend
 }
 

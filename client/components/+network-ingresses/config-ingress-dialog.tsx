@@ -1,4 +1,4 @@
-import "./add-ingress-dialog.scss"
+import "./config-ingress-dialog.scss"
 
 import React from "react";
 import {observer} from "mobx-react";
@@ -11,36 +11,62 @@ import {Collapse} from "../collapse";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {Backend, backend, BackendDetails, MultiRuleDetails, Rule, TlsDetails, Tls} from "../+network-ingress-details";
-import {Ingress} from "../../api/endpoints";
+import {Ingress, ingressApi} from "../../api/endpoints";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {ingressStore} from "./ingress.store";
+import { IKubeObjectMetadata } from "client/api/kube-object";
 
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class AddIngressDialog extends React.Component<Props> {
+export class ConfigIngressDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
+  @observable static Data: Ingress = null;
   @observable name = "";
   @observable namespace = "";
   @observable tls: Tls[] = [];
   @observable rules: Rule[] = [];
   @observable backend: Backend = backend
 
-  static open() {
-    AddIngressDialog.isOpen = true;
+  static open(object:Ingress) {
+    ConfigIngressDialog.isOpen = true;
+    ConfigIngressDialog.Data = object;
   }
 
   static close() {
-    AddIngressDialog.isOpen = false;
+    ConfigIngressDialog.isOpen = false;
   }
 
-  close = () => {
-    AddIngressDialog.close();
+  close = async () => {
+    ConfigIngressDialog.close();
+    await this.reset();
+
   }
 
-  createIngress = () => {
+  get ingress() {
+    return ConfigIngressDialog.Data
+  }
+
+  reset = async () => {
+    this.name=""
+    this.namespace=""
+    this.tls=[]
+    this.rules=[]
+    this.backend.serviceName=""
+    this.backend.servicePort=0
+
+  }
+
+  onOpen = async () => {
+    this.name = this.ingress.getName()
+    this.namespace = this.ingress.getNs()
+    this.rules = this.ingress.spec.rules
+    this.backend = this.ingress.spec.backend||{serviceName:'',servicePort:0}
+  }
+
+  updateIngress = () => {
     const {name, namespace, tls, rules, backend} = this;
     let data: Partial<Ingress> = {
       spec: {
@@ -48,44 +74,47 @@ export class AddIngressDialog extends React.Component<Props> {
           return {hosts: item.hosts, secretName: item.secretName};
         }).slice(),
         rules: JSON.parse(JSON.stringify(rules)),
-      }
+      },
     }
-    if (backend.serviceName != "" && backend.servicePort != 0) {
+    if (backend && backend.serviceName != "" && backend.servicePort != 0) {
       data.spec.backend = JSON.parse(JSON.stringify(backend))
     }
-    try {
-      ingressStore.create({name: name, namespace: namespace}, {...data})
-      Notifications.ok(
-        <>Ingress {name} save succeeded</>
-      );
-      this.close();
-    } catch (err) {
-      Notifications.error(err);
-    }
+      ingressStore.update(this.ingress, {...data}).then(res=>{
+        Notifications.ok(
+          <>Ingress {name} save succeeded</>
+        );
+        this.close();
+      }).catch(err=>{
+        Notifications.error(err);
+      })
+
   }
 
   render() {
     const {...dialogProps} = this.props;
-    const header = <h5><Trans>Create Ingress</Trans></h5>;
+    const header = <h5><Trans>Update Ingress</Trans></h5>;
     return (
       <Dialog
         {...dialogProps}
-        className="AddIngressDialog"
-        isOpen={AddIngressDialog.isOpen}
+        className="ConfigIngressDialog"
+        isOpen={ConfigIngressDialog.isOpen}
         close={this.close}
-        pinned
+        onOpen={this.onOpen}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createIngress}>
+          <WizardStep contentClass="flow column" nextLabel={<Trans>Apply</Trans>} next={this.updateIngress}>
             <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               required={true}
+              disabled={true}
               title={"Name"}
               value={this.name}
               onChange={value => this.name = value}
             />
             <SubTitle title={<Trans>Namespace</Trans>}/>
             <NamespaceSelect
+              required={true}
+              isDisabled={true}
               themeName="light"
               title={"namespace"}
               value={this.namespace}
@@ -96,7 +125,7 @@ export class AddIngressDialog extends React.Component<Props> {
                 value={this.rules}
                 onChange={value => this.rules = value}/>
             </Collapse>
-            
+
             {/**********  Please do not delete it. It may be used later ***********/}
 
             {/* <Collapse panelName={<Trans>Backend</Trans>} key={"backend"}>
