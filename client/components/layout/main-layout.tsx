@@ -21,7 +21,6 @@ import {withRouter,RouteComponentProps } from 'react-router';
 import {kubeWatchApi } from '../../api/kube-watch-api'
 import store from 'store'
 import {Notifications} from "../notifications";
-import { DockTabStore } from "../dock/dock-tab.store";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
