@@ -21,6 +21,7 @@ import {withRouter,RouteComponentProps } from 'react-router';
 import {kubeWatchApi } from '../../api/kube-watch-api'
 import store from 'store'
 import {Notifications} from "../notifications";
+import { DockTabStore } from "../dock/dock-tab.store";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -71,6 +72,8 @@ export class Layout extends React.Component<Props,State> {
   loginout = () => {
     configStore.reset()
     kubeWatchApi.reset()
+    window.localStorage.removeItem('lens_dock')
+    window.localStorage.removeItem('lens_edit_resource_store')
     window.localStorage.removeItem('u_config')
     window.location.replace('/login')
   }
