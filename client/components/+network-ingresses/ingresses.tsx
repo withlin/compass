@@ -11,6 +11,10 @@ import {KubeObjectListLayout} from "../kube-object";
 import {Trans} from "@lingui/macro";
 import {apiManager} from "../../api/api-manager";
 import {AddIngressDialog} from "./add-ingress-dialog";
+import {ConfigIngressDialog} from "./config-ingress-dialog";
+import { Link } from "react-router-dom";
+import { stopPropagation } from "../../utils";
+import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   name = "name",
@@ -19,6 +23,17 @@ enum sortBy {
 }
 
 interface Props extends RouteComponentProps<IngressRouteParams> {
+}
+
+export function nameRender(ingress: Ingress) {
+  const name = ingress.getName();
+  return (
+    <Link onClick={(event) => { stopPropagation(event); ConfigIngressDialog.open(ingress) }} to={null}>
+      <Tooltip title={name} placement="top-start">
+        <span>{name}</span>
+      </Tooltip>
+    </Link>
+  );
 }
 
 @observer
@@ -45,7 +60,7 @@ export class Ingresses extends React.Component<Props> {
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(ingress: Ingress) => [
-            ingress.getName(),
+            nameRender(ingress),
             ingress.getNs(),
             ingress.getRoutes().map(route => <p key={route}>{route}</p>),
             ingress.getAge(),
@@ -65,6 +80,7 @@ export class Ingresses extends React.Component<Props> {
           }}
         />
         <AddIngressDialog/>
+        <ConfigIngressDialog/>
       </>
     )
   }
@@ -79,3 +95,5 @@ export function IngressMenu(props: KubeObjectMenuProps<Ingress>) {
 apiManager.registerViews(ingressApi, {
   Menu: IngressMenu
 })
+
+

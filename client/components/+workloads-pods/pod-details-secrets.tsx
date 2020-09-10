@@ -31,6 +31,7 @@ export class PodDetailsSecrets extends Component<Props> {
       <div className="PodDetailsSecrets">
         {
           this.secrets.map(secret => {
+            if(!!secret){ return }
             return (
               <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
                 {secret.getName()}
