@@ -16,6 +16,7 @@ import {ConfigMapsKeySelect} from "../+config-maps/config-maps-key-select";
 import {SecretKeySelect} from "../+config-secrets/secret-key-select";
 import {Grid, Paper} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
+import { EvnVarDetails } from "./env-details-task";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -39,6 +40,7 @@ export class EnvironmentDetails extends React.Component<Props> {
       // "Custom",
       "ConfigMaps",
       "Secrets",
+      "Normal",
       // "Other"
     ]
   }
@@ -46,7 +48,7 @@ export class EnvironmentDetails extends React.Component<Props> {
   add = () => {
     this.value.push({
       type: "ConfigMaps",
-      envConfig: {}
+      envConfig: {"env":[]}
     });
   }
 
@@ -173,6 +175,16 @@ export class EnvironmentDetails extends React.Component<Props> {
     )
   }
 
+  rNormal(index: number) {
+    return (
+      <div>
+       <EvnVarDetails
+          value={this.value[index].envConfig.env}
+          onChange={(value) => this.value[index].envConfig.env = value}
+       />
+      </div>
+    )
+  }
   render() {
 
     return (
@@ -211,6 +223,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                         {this.value[index].type == "ConfigMaps" ? this.rConfigMaps(index) : null}
                         {this.value[index].type == "Secrets" ? this.rSecrets(index) : null}
                         {this.value[index].type == "Other" ? this.rOther(index) : null}
+                        {this.value[index].type == "Normal" ? this.rNormal(index) : null}
                       </div>
                       <br/>
                     </Grid>
