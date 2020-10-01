@@ -1,3 +1,5 @@
+import { fromLong } from "ip";
+
 // Local express.js & endpoints
 export * from "./config.api";
 export * from "./cluster.api";
@@ -51,3 +53,9 @@ export * from "./tenant-department.api";
 export * from "./tenant-user";
 export * from "./tenant-role.api";
 export * from "./subnet.api";
+export * from "./istio-destination-rule.api";
+export * from "./istio-gateway.api";
+export * from "./istio-service-entry.api";
+export * from "./istio-workload-entry.api";
+export * from "./istio-virtual-service.api";
+export * from "./istio-sidecar.api";

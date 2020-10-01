@@ -26,6 +26,7 @@ import { Config, configRoute } from "./+config";
 import { Events } from "./+events";
 import { Login } from "./+login";
 import { Tekton, tektonRoute } from "./+tekton";
+import { Istio, istioRoute } from "./+istio"
 import { Ovn, ovnRoute } from "./+ovn";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
@@ -52,7 +53,7 @@ class App extends React.Component {
   render() {
     let homeUrl = ''
     const userConfig = store.get('u_config')
-    if(userConfig){
+    if (userConfig) {
       configStore.setConfig(userConfig)
       let admin = userConfig.isClusterAdmin
       homeUrl = admin == 'true' ? clusterURL() : workloadsURL();
@@ -76,7 +77,8 @@ class App extends React.Component {
                 <Route component={Namespaces} {...namespacesRoute} />
                 <Route component={Events} {...eventRoute} />
                 <Route component={Tekton} {...tektonRoute} />
-                <Route component={Ovn} {...ovnRoute} /> 
+                <Route component={Istio} {...istioRoute} />
+                <Route component={Ovn} {...ovnRoute} />
                 <Route component={CustomResources} {...crdRoute} />
                 <Route component={UserManagement} {...usersManagementRoute} />
                 <Route component={Apps} {...appsRoute} />
@@ -84,7 +86,7 @@ class App extends React.Component {
                 <Redirect exact from="/" to={homeUrl} />
                 <Route component={Login} path="/login" />
                 <Route path="*" component={NotFound} />
-                
+
               </Switch>
               <KubeObjectDetails />
               <Notifications />
