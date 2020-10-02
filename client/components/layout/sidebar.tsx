@@ -1,38 +1,39 @@
 import "./sidebar.scss";
 
 import * as React from "react";
-import {computed, observable, reaction} from "mobx";
-import {observer} from "mobx-react";
-import {matchPath, NavLink} from "react-router-dom";
-import {Trans} from "@lingui/macro";
-import {createStorage, cssNames} from "../../utils";
-import {Icon} from "../icon";
-import {workloadsRoute, workloadsURL} from "../+workloads";
-import {namespacesURL} from "../+namespaces";
-import {nodesURL} from "../+nodes";
-import {usersManagementRoute, usersManagementURL} from "../+user-management";
-import {networkRoute, networkURL} from "../+network";
-import {storageRoute, storageURL} from "../+storage";
-import {clusterURL} from "../+cluster";
-import {tektonURL, tektonRoute, Tekton} from "../+tekton";
-import {ovnURL, ovnRoute, Ovn} from "../+ovn";
-import {Config, configRoute, configURL} from "../+config";
-import {eventRoute, eventsURL} from "../+events";
-import {tenantRoute, tenantURL, Tenant} from "../+tenant";
-import {Apps, appsRoute, appsURL} from "../+apps";
-import {namespaceStore} from "../+namespaces/namespace.store";
-import {TabRoute} from "./main-layout";
-import {Workloads} from "../+workloads";
-import {UserManagement} from "../+user-management";
-import {Storage} from "../+storage";
-import {Network} from "../+network";
-import {crdStore} from "../+custom-resources";
-import {CrdList, crdResourcesRoute, crdRoute, crdURL} from "../+custom-resources";
-import {CustomResources} from "../+custom-resources/custom-resources";
-import {navigation} from "../../navigation";
+import { computed, observable, reaction } from "mobx";
+import { observer } from "mobx-react";
+import { matchPath, NavLink } from "react-router-dom";
+import { Trans } from "@lingui/macro";
+import { createStorage, cssNames } from "../../utils";
+import { Icon } from "../icon";
+import { workloadsRoute, workloadsURL } from "../+workloads";
+import { namespacesURL } from "../+namespaces";
+import { nodesURL } from "../+nodes";
+import { usersManagementRoute, usersManagementURL } from "../+user-management";
+import { networkRoute, networkURL } from "../+network";
+import { storageRoute, storageURL } from "../+storage";
+import { clusterURL } from "../+cluster";
+import { tektonURL, tektonRoute, Tekton } from "../+tekton";
+import { Istio, istioRoute, istioGatewayURL } from "../+istio";
+import { ovnURL, ovnRoute, Ovn } from "../+ovn";
+import { Config, configRoute, configURL } from "../+config";
+import { eventRoute, eventsURL } from "../+events";
+import { tenantRoute, tenantURL, Tenant } from "../+tenant";
+import { Apps, appsRoute, appsURL } from "../+apps";
+import { namespaceStore } from "../+namespaces/namespace.store";
+import { TabRoute } from "./main-layout";
+import { Workloads } from "../+workloads";
+import { UserManagement } from "../+user-management";
+import { Storage } from "../+storage";
+import { Network } from "../+network";
+import { crdStore } from "../+custom-resources";
+import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
+import { CustomResources } from "../+custom-resources/custom-resources";
+import { navigation } from "../../navigation";
 import store from 'store'
 
-const SidebarContext = React.createContext<SidebarContextValue>({pinned: false});
+const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
   pinned: boolean;
 };
@@ -61,7 +62,7 @@ export class Sidebar extends React.Component<Props> {
           key={group}
           id={group}
           className="sub-menu-parent"
-          url={crdURL({query: {groups: group}})}
+          url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
           text={group}
         />
@@ -70,16 +71,16 @@ export class Sidebar extends React.Component<Props> {
   }
 
   render() {
-    const {toggle, isPinned, className} = this.props;
+    const { toggle, isPinned, className } = this.props;
     const userConfig = store.get('u_config')
     const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     const query = namespaceStore.getContextParams();
     return (
-      <SidebarContext.Provider value={{pinned: isPinned}}>
-        <div className={cssNames("Sidebar flex column", className, {pinned: isPinned})}>
+      <SidebarContext.Provider value={{ pinned: isPinned }}>
+        <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/workloads" className="box grow">
-              <Icon svg="compass" className="logo-icon"/>
+              <Icon svg="compass" className="logo-icon" />
               <div className="logo-text">Compass</div>
             </NavLink>
             <Icon
@@ -96,103 +97,111 @@ export class Sidebar extends React.Component<Props> {
               id="cluster"
               url={clusterURL()}
               text={<Trans>Cluster</Trans>}
-              icon={<Icon svg="kube"/>}
+              icon={<Icon svg="kube" />}
             />
             <SidebarNavItem
               isHidden={!isClusterAdmin}
               id="nodes"
               url={nodesURL()}
               text={<Trans>Nodes</Trans>}
-              icon={<Icon svg="nodes"/>}
+              icon={<Icon svg="nodes" />}
             />
             <SidebarNavItem
               id="workloads"
-              url={workloadsURL({query})}
+              url={workloadsURL({ query })}
               routePath={workloadsRoute.path}
               subMenus={Workloads.tabRoutes}
               text={<Trans>Workloads</Trans>}
-              icon={<Icon svg="workloads"/>}
+              icon={<Icon svg="workloads" />}
             />
             <SidebarNavItem
               id="tekton"
-              url={tektonURL({query})}
+              url={tektonURL({ query })}
               routePath={tektonRoute.path}
               subMenus={Tekton.tabRoutes}
-              icon={<Icon material="palette"/>}
+              icon={<Icon material="palette" />}
               text={<Trans>Tekton</Trans>}
             />
             <SidebarNavItem
+              id="istio"
+              url={istioGatewayURL({ query })}
+              routePath={istioRoute.path}
+              subMenus={Istio.tabRoutes}
+              icon={<Icon material="dialpad" />}
+              text={<Trans>ServiceMesh</Trans>}
+            />
+            <SidebarNavItem
               id="config"
-              url={configURL({query})}
+              url={configURL({ query })}
               routePath={configRoute.path}
               subMenus={Config.tabRoutes}
               text={<Trans>Configuration</Trans>}
-              icon={<Icon material="list"/>}
+              icon={<Icon material="list" />}
             />
             <SidebarNavItem
               id="networks"
-              url={networkURL({query})}
+              url={networkURL({ query })}
               routePath={networkRoute.path}
               subMenus={Network.tabRoutes}
               text={<Trans>Network</Trans>}
-              icon={<Icon material="device_hub"/>}
+              icon={<Icon material="device_hub" />}
             />
             <SidebarNavItem
               id="storage"
-              url={storageURL({query})}
+              url={storageURL({ query })}
               routePath={storageRoute.path}
               subMenus={Storage.tabRoutes}
-              icon={<Icon svg="storage"/>}
+              icon={<Icon svg="storage" />}
               text={<Trans>Storage</Trans>}
             />
             <SidebarNavItem
               id="events"
-              url={eventsURL({query})}
+              url={eventsURL({ query })}
               routePath={eventRoute.path}
-              icon={<Icon material="access_time"/>}
+              icon={<Icon material="access_time" />}
               text={<Trans>Events</Trans>}
             />
             <SidebarNavItem
               isHidden={!isClusterAdmin}
               id="namespaces"
               url={namespacesURL()}
-              icon={<Icon material="layers"/>}
+              icon={<Icon material="layers" />}
               text={<Trans>Namespaces</Trans>}
             />
             <SidebarNavItem
               isHidden={!isClusterAdmin}
               id="ovn"
-              url={ovnURL({query})}
+              url={ovnURL({ query })}
               routePath={ovnRoute.path}
               subMenus={Ovn.tabRoutes}
-              icon={<Icon material="wifi_tethering"/>}
+              icon={<Icon material="wifi_tethering" />}
               text={<Trans>OVN Config</Trans>}
             />
             <SidebarNavItem
               isHidden={!isClusterAdmin}
               id="tenant"
-              url={tenantURL({query})}
+              url={tenantURL({ query })}
               routePath={tenantRoute.path}
               subMenus={Tenant.tabRoutes}
               text={<Trans>Tenant</Trans>}
-              icon={<Icon material="people"/>}
+              icon={<Icon material="people" />}
             />
             <SidebarNavItem
               id="apps"
               isHidden={!isClusterAdmin}
-              url={appsURL({query})}
+              url={appsURL({ query })}
               subMenus={Apps.tabRoutes}
               routePath={appsRoute.path}
-              icon={<Icon material="apps"/>}
+              icon={<Icon material="apps" />}
               text={<Trans>Apps</Trans>}
             />
             <SidebarNavItem
               isHidden={!isClusterAdmin}
               id="users"
-              url={usersManagementURL({query})}
+              url={usersManagementURL({ query })}
               routePath={usersManagementRoute.path}
               subMenus={UserManagement.tabRoutes}
-              icon={<Icon material="security"/>}
+              icon={<Icon material="security" />}
               text={<Trans>Access Control</Trans>}
             />
             <SidebarNavItem
@@ -201,7 +210,7 @@ export class Sidebar extends React.Component<Props> {
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
               routePath={crdRoute.path}
-              icon={<Icon material="extension"/>}
+              icon={<Icon material="extension" />}
               text={<Trans>Custom Resources</Trans>}
             >
               {this.renderCustomResources()}
@@ -242,15 +251,15 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   }
 
   isActive = () => {
-    const {routePath, url} = this.props;
-    const {pathname} = navigation.location;
+    const { routePath, url } = this.props;
+    const { pathname } = navigation.location;
     return !!matchPath(pathname, {
       path: routePath || url
     });
   }
 
   render() {
-    const {isHidden, subMenus = [], icon, text, url, children, className} = this.props;
+    const { isHidden, subMenus = [], icon, text, url, children, className } = this.props;
     if (isHidden) {
       return null;
     }
@@ -259,7 +268,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
       const isActive = this.isActive();
       return (
         <div className={cssNames("SidebarNavItem", className)}>
-          <div className={cssNames("nav-item", {active: isActive})} onClick={this.toggleSubMenu}>
+          <div className={cssNames("nav-item", { active: isActive })} onClick={this.toggleSubMenu}>
             {icon}
             <span className="link-text">{text}</span>
             <Icon
@@ -267,15 +276,15 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
               material={this.isExpanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
             />
           </div>
-          <ul className={cssNames("sub-menu", {active: isActive})}>
-            {subMenus.map(({title, url}) => (
-              <NavLink key={url} to={url} className={cssNames({visible: this.isExpanded})}>
+          <ul className={cssNames("sub-menu", { active: isActive })}>
+            {subMenus.map(({ title, url }) => (
+              <NavLink key={url} to={url} className={cssNames({ visible: this.isExpanded })}>
                 {title}
               </NavLink>
             ))}
             {React.Children.toArray(children).map((child: React.ReactElement<any>) => {
               return React.cloneElement(child, {
-                className: cssNames(child.props.className, {visible: this.isExpanded})
+                className: cssNames(child.props.className, { visible: this.isExpanded })
               });
             })}
           </ul>
