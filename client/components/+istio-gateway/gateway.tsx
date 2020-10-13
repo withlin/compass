@@ -9,6 +9,8 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { MenuItem } from "../menu";
+import { GateWayDialog } from "./add-gateway-dialog"
+
 
 enum sortBy {
     name = "name",
@@ -65,8 +67,16 @@ export class Gateways extends React.Component<Props> {
                     renderItemMenu={(item: Gateway) => {
                         return <GatewayMenu object={item} />;
                     }}
+                    addRemoveButtons={{
+                        addTooltip: <Trans>Gateway</Trans>,
+                        onAdd: () => {
+                            GateWayDialog.open();
+                        },
+                    }}
                 />
+                <GateWayDialog />
             </>
+
         );
     }
 }
