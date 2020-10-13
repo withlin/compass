@@ -120,6 +120,15 @@ export interface TaskRunSpec {
   outputs?: Outputs;
 }
 
+export enum TaskRunStatusReason {
+  Pending = "Pending",
+  Failed = "Failed",
+  Running = "Running",
+  Succeeded = "Succeeded",
+  Cancel = "Cancel",
+  Timeout = "Timeout",
+}
+
 @autobind()
 export class TaskRun extends KubeObject {
   static kind = "TaskRun";
@@ -146,6 +155,13 @@ export class TaskRun extends KubeObject {
     return this.metadata.labels.namespace != undefined
       ? this.metadata.labels.namespace
       : "";
+  }
+
+  getStatus(): string {
+    const conditions = this?.status?.conditions;
+    if (conditions === undefined) return "";
+    if (conditions[0].reason == undefined) return "";
+    return conditions[0].reason;
   }
 
   getSteps() {

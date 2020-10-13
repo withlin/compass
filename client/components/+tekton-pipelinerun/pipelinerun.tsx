@@ -31,6 +31,7 @@ import { advanceSecondsToHms } from "../../api/endpoints";
 import { configStore } from "../../config.store";
 import { Link } from "react-router-dom";
 import { PipelineStatus } from "../+constant/tekton-constants";
+import { runGraphAnnotationKey } from '../+constant/tekton-constants'
 
 enum sortBy {
   name = "name",
@@ -40,7 +41,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -303,13 +304,30 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           const pipelineRun = object;
           try {
             // will delete pipelineRun
-            await pipelineRunStore.remove(pipelineRun);
+            const annotations = pipelineRun.metadata.annotations;
+            const pipelineRunGraphName = annotations
+              ? annotations[runGraphAnnotationKey]
+              : "";
+            let currentPipelineRunGraph;
+            currentPipelineRunGraph = tektonGraphStore.getByName(pipelineRunGraphName);
+            if (currentPipelineRunGraph === undefined) {
+              Notifications.error(
+                <>Not found current pipeline run graph,please check again!</>
+              );
+              return
+            }
+            currentPipelineRunGraph.metadata.name = pipelineRun.getName() + new Date().getTime().toString();
 
+            await tektonGraphStore.create({
+              namespace: currentPipelineRunGraph.getNs(), name: currentPipelineRunGraph.getName()
+            }, { spec: currentPipelineRunGraph.spec })
+            await pipelineRunStore.remove(pipelineRun);
+            annotations[runGraphAnnotationKey] = currentPipelineRunGraph.getName();
             const newPipelineRun: Partial<PipelineRun> = {
               metadata: {
                 name: pipelineRun.getName(),
                 namespace: pipelineRun.getNs(),
-                annotations: pipelineRun.copyAnnotations(),
+                annotations: annotations,
                 labels: pipelineRun.copyLabels(),
               } as IKubeObjectMetadata,
               spec: {

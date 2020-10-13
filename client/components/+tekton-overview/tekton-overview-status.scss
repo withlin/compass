@@ -1,0 +1,13 @@
+.OvervieStatus {
+  --tekton-status-running: #{$pod-status-running-color};
+  --tekton-status-pending: #{$pod-status-pending-color};
+  --tekton-status-succeeded: #{$pod-status-succeeded-color};
+  --tekton-status-failed: #{$pod-status-failed-color};
+  --tekton-status-sum: #a336a7;
+
+  .PieChart {
+    .chart-container {
+      width: 110px;
+    }
+  }
+}

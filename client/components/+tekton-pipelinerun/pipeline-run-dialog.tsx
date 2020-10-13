@@ -29,7 +29,8 @@ import {
 } from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
-import { namespace } from "store";
+import { OwnerReferences } from '../../api/kube-object'
+import { runGraphAnnotationKey } from '../+constant/tekton-constants'
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -67,11 +68,11 @@ export class PipelineRunDialog extends React.Component<Props> {
   @observable static pipelineData: Pipeline = null;
   @observable graph: any = null;
   // @observable nameSpace: string = "";
-  // @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
+  @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
 
-  @computed get value(): PipelineRunResult {
-    return this.props.value || pipelineRunResult;
-  }
+  // @computed get value(): PipelineRunResult {
+  //   return this.props.value || pipelineRunResult;
+  // }
 
   static open(pipeline: Pipeline) {
     PipelineRunDialog.isOpen = true;
@@ -148,7 +149,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
+          annotations: Object.fromEntries(new Map<string, string>().set(runGraphAnnotationKey, graph.getName())),
         } as IKubeObjectMetadata,
         spec: {
           resources: this.value.resources,
@@ -159,10 +160,25 @@ export class PipelineRunDialog extends React.Component<Props> {
         },
       };
 
-      await pipelineRunApi.create(
+
+
+      let resultObject: any = await pipelineRunApi.create(
         { name: this.value.name, namespace: this.pipeline.getNs() },
         { ...pipelineRun }
       );
+
+      const currentPipelineRun = resultObject["Object"] as PipelineRun
+      const ownerReferences: OwnerReferences = {
+        apiVersion: currentPipelineRun.metadata.resourceVersion,
+        kind: currentPipelineRun.kind,
+        name: this.pipeline.metadata.name,
+        uid: currentPipelineRun.metadata.uid,
+        controller: false,
+        blockOwnerDeletion: false,
+      }
+      graph.addOwnerReferences([ownerReferences]);
+      await tektonGraphStore.update(graph, { ...graph })
+
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {

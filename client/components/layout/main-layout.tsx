@@ -71,6 +71,8 @@ export class Layout extends React.Component<Props,State> {
   loginout = () => {
     configStore.reset()
     kubeWatchApi.reset()
+    window.localStorage.removeItem('lens_dock')
+    window.localStorage.removeItem('lens_edit_resource_store')
     window.localStorage.removeItem('u_config')
     window.location.replace('/login')
   }

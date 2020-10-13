@@ -9,13 +9,13 @@ import {
 import { apiManager } from "../../api/api-manager";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { defaultInitData } from "../+tekton-graph/common";
-import { Notifications } from "../notifications/notifications";
 
 @autobind()
 export class PipelineStore extends KubeObjectStore<Pipeline> {
   api = pipelineApi;
 
   getNodeData(pipeline: Pipeline) {
+    //TODO hard code needs fix
     const graphName = pipeline.getValueFromAnnotations(
       "fuxi.nip.io/tektongraphs"
     );
@@ -34,6 +34,13 @@ export class PipelineStore extends KubeObjectStore<Pipeline> {
       return { width: tektonGraph.spec.width, height: tektonGraph.spec.height };
     }
     return null;
+  }
+
+  getStatuses(pipeline: Pipeline[]) {
+    const status = {
+      sum: pipeline.length,
+    };
+    return status;
   }
 }
 

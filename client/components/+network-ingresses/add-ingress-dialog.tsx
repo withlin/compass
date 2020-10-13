@@ -73,6 +73,7 @@ export class AddIngressDialog extends React.Component<Props> {
         className="AddIngressDialog"
         isOpen={AddIngressDialog.isOpen}
         close={this.close}
+        pinned
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createIngress}>
@@ -95,7 +96,10 @@ export class AddIngressDialog extends React.Component<Props> {
                 value={this.rules}
                 onChange={value => this.rules = value}/>
             </Collapse>
-            <Collapse panelName={<Trans>Backend</Trans>} key={"backend"}>
+            
+            {/**********  Please do not delete it. It may be used later ***********/}
+
+            {/* <Collapse panelName={<Trans>Backend</Trans>} key={"backend"}>
               <BackendDetails
                 value={this.backend}
                 onChange={value => this.backend = value}
@@ -106,7 +110,7 @@ export class AddIngressDialog extends React.Component<Props> {
                 value={this.tls}
                 onChange={value => this.tls = value}
               />
-            </Collapse>
+            </Collapse> */}
           </WizardStep>
         </Wizard>
       </Dialog>

@@ -8,6 +8,13 @@ import { apiManager } from "../../api/api-manager";
 @autobind()
 export class TaskStore extends KubeObjectStore<Task> {
   api = taskApi;
+
+  getStatuses(tasks: Task[]) {
+    const status = {
+      sum: tasks.length,
+    };
+    return status;
+  }
 }
 
 export const taskStore = new TaskStore();
