@@ -13,34 +13,23 @@ import { stopPropagation } from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
-    name?: string;
     themeName?: "dark" | "light" | "outlined";
 
     onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 
-export interface Selector {
-    key: string,
-    value: string
-}
-
-export const defaultSelector: Selector = {
-    key: "",
-    value: "",
-}
-
 
 @observer
-export class SelectorDetails extends React.Component<Props> {
+export class GatewayDetails extends React.Component<Props> {
 
 
-    @computed get value(): Selector[] {
+    @computed get value(): string[] {
         return this.props.value || [];
     }
 
     add = () => {
-        this.value.push(defaultSelector);
+        this.value.push("");
     };
 
     remove = (index: number) => {
@@ -55,14 +44,9 @@ export class SelectorDetails extends React.Component<Props> {
                         <Grid container spacing={1} direction={"row"} zeroMinWidth>
                             <Grid item xs={12}>
                                 <Input
-                                    placeholder={"key"}
-                                    value={this.value[index].key}
-                                    onChange={(value) => (this.value[index].key = value)}
-                                />
-                                <Input
-                                    placeholder={"value"}
-                                    value={this.value[index].value}
-                                    onChange={(value) => (this.value[index].value = value)}
+                                    placeholder={"gateway"}
+                                    value={this.value[index]}
+                                    onChange={(value) => (this.value[index] = value)}
                                 />
                             </Grid>
 
@@ -92,7 +76,7 @@ export class SelectorDetails extends React.Component<Props> {
                 <SubTitle
                     title={
                         <>
-                            <Trans>Selector</Trans>
+                            <Trans>Gateways</Trans>
               &nbsp;&nbsp;
               <Icon material={"edit"} className={"editIcon"} onClick={event => {
                                 stopPropagation(event);

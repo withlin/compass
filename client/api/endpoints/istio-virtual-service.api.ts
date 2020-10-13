@@ -116,7 +116,7 @@ export interface HTTPRoute {
   // Redirect primitive. Rewrite will be performed before forwarding.
   rewrite?: HTTPRewrite;
   // Timeout for HTTP requests, default is disabled.
-  timeout?: string | Date;
+  timeout?: string;
   // Retry policy for HTTP requests.
   retries?: HTTPRetry;
   // Fault injection policy to apply on HTTP traffic at the client side.
@@ -238,7 +238,7 @@ export interface HTTPRetry {
   // [HTTP route](https://istio.io/docs/reference/config/networking/virtual-service/#HTTPRoute).
   attempts?: number;
   // Timeout per retry attempt for a given request. format: 1h/1m/1s/1ms. MUST BE >=1ms.
-  perTryTimeout?: string | Date;
+  perTryTimeout?: string;
   // Specifies the conditions under which retry takes place.
   // One or more policies can be specified using a ‘,’ delimited list.
   // See the [retry policies](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on)
@@ -260,7 +260,7 @@ export interface HTTPRewrite {
 
 export interface Delegate {
   // Name specifies the name of the delegate VirtualService.
-  name: string;
+  name?: string;
   // Namespace specifies the namespace where the delegate VirtualService resides.
   // By default, it is same to the root's.
   namespace?: string;

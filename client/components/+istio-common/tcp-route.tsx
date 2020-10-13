@@ -9,64 +9,56 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Grid } from "@material-ui/core";
 import { stopPropagation } from "../../utils";
+import { Server, Port } from "../../api/endpoints/istio-gateway.api"
+import { HostDetails } from "./hosts"
 
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
-    name?: string;
     themeName?: "dark" | "light" | "outlined";
 
     onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 
-export interface Selector {
-    key: string,
-    value: string
-}
 
-export const defaultSelector: Selector = {
-    key: "",
-    value: "",
-}
 
 
 @observer
-export class SelectorDetails extends React.Component<Props> {
+export class TcpRouteDetail extends React.Component<Props> {
 
 
-    @computed get value(): Selector[] {
+    @computed get value(): string[] {
         return this.props.value || [];
     }
 
+
+    get typeOptions() {
+        return ["true", "false"];
+    }
+
     add = () => {
-        this.value.push(defaultSelector);
+        this.value.push("");
     };
 
     remove = (index: number) => {
         this.value.splice(index, 1);
     };
 
-    renderHostDetail(index: number) {
+    renderTcpRouteDetail(index: number) {
         return (
             <>
                 <Grid container spacing={5} direction={"row"} zeroMinWidth>
                     <Grid item xs={11} direction={"row"} zeroMinWidth>
                         <Grid container spacing={1} direction={"row"} zeroMinWidth>
-                            <Grid item xs={12}>
-                                <Input
-                                    placeholder={"key"}
-                                    value={this.value[index].key}
-                                    onChange={(value) => (this.value[index].key = value)}
-                                />
-                                <Input
-                                    placeholder={"value"}
-                                    value={this.value[index].value}
-                                    onChange={(value) => (this.value[index].value = value)}
-                                />
-                            </Grid>
+
 
                         </Grid>
+
+                        <Grid item xs zeroMinWidth>
+
+                        </Grid>
+
 
                     </Grid>
                     <Grid item xs zeroMinWidth>
@@ -86,13 +78,14 @@ export class SelectorDetails extends React.Component<Props> {
         )
     }
 
+
     render() {
         return (
             <>
                 <SubTitle
                     title={
                         <>
-                            <Trans>Selector</Trans>
+                            <Trans>TcpRoute</Trans>
               &nbsp;&nbsp;
               <Icon material={"edit"} className={"editIcon"} onClick={event => {
                                 stopPropagation(event);
@@ -102,7 +95,7 @@ export class SelectorDetails extends React.Component<Props> {
                     }>
                 </SubTitle>
                 {this.value.map((item: any, index: number) => {
-                    return this.renderHostDetail(index);
+                    return this.renderTcpRouteDetail(index);
                 })}
             </>
         );
