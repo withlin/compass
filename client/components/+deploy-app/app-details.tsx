@@ -39,7 +39,7 @@ export class AppDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title={<Trans>App Type</Trans>}/>
+        <SubTitle title={<Trans>App Type 2121</Trans>}/>
         <Select
           options={this.typeOptions}
           value={this.value.type}

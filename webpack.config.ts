@@ -33,7 +33,7 @@ export default () => {
     },
     devServer: {
       //项目根目录
-      host: '127.0.0.1',
+      host: '0.0.0.0',
       port: '8087',
       contentBase: path.join(__dirname, "./dist"),
       historyApiFallback: true,
@@ -41,46 +41,46 @@ export default () => {
       publicPath: '',
       proxy: {
         '/base': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,
           changeOrigin: true,
           // pathRewrite: { '^/base': '' }
         },
         '/api-kube': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-kube': '/workload' },
         },
         '/api-resource': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-resource': '/workload' }
         },
 
         '/user-login': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         },
 
         '/api/config': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api/config': '/workload/config' }
         },
 
         '/api': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api': '/workload' }
         },
 
         '/workload': {
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://10.200.65.195:8080/',
           ws: true,
           secure: false,
           logLevel: 'debug',
