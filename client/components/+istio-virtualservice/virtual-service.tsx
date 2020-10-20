@@ -9,6 +9,7 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { MenuItem } from "../menu";
+import { VirtualServiceDialog } from "./add-virtual-service-dialog"
 
 enum sortBy {
     name = "name",
@@ -65,7 +66,14 @@ export class VirtualServices extends React.Component<Props> {
                     renderItemMenu={(item: VirtualService) => {
                         return <VirtualServiceMenu object={item} />;
                     }}
+                    addRemoveButtons={{
+                        addTooltip: <Trans>VirtualService</Trans>,
+                        onAdd: () => {
+                            VirtualServiceDialog.open();
+                        },
+                    }}
                 />
+                <VirtualServiceDialog />
             </>
         );
     }

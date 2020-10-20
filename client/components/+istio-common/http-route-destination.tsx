@@ -9,64 +9,96 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Grid } from "@material-ui/core";
 import { stopPropagation } from "../../utils";
+import { HTTPRouteDestination, Destination } from "../../api/endpoints/istio-virtual-service.api"
+
 
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
-    name?: string;
     themeName?: "dark" | "light" | "outlined";
 
     onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
-
-export interface Selector {
-    key: string,
-    value: string
+export interface DestinationTmp extends Destination {
+    portString: string,
 }
 
-export const defaultSelector: Selector = {
-    key: "",
-    value: "",
+export const defaultDestination: DestinationTmp = {
+    host: "",
+    subset: "",
+    portString: "",
+}
+
+
+export interface HTTPRouteDestinationTmp extends HTTPRouteDestination {
+    destinationTmp: DestinationTmp,
+    weightString: string,
+}
+
+export const defaultHTTPRouteDestination: HTTPRouteDestinationTmp = {
+    destinationTmp: defaultDestination,
+    weightString: "",
+    // headers: not support now
 }
 
 
 @observer
-export class SelectorDetails extends React.Component<Props> {
+export class HttpRouteDestinationDetail extends React.Component<Props> {
 
 
-    @computed get value(): Selector[] {
+    @computed get value(): HTTPRouteDestinationTmp[] {
         return this.props.value || [];
     }
 
+
+    get typeOptions() {
+        return ["true", "false"];
+    }
+
     add = () => {
-        this.value.push(defaultSelector);
+        this.value.push(defaultHTTPRouteDestination);
     };
 
     remove = (index: number) => {
         this.value.splice(index, 1);
     };
 
-    renderHostDetail(index: number) {
+    renderHttpRouteDetail(index: number) {
         return (
             <>
                 <Grid container spacing={5} direction={"row"} zeroMinWidth>
                     <Grid item xs={11} direction={"row"} zeroMinWidth>
                         <Grid container spacing={1} direction={"row"} zeroMinWidth>
+
                             <Grid item xs={12}>
                                 <Input
-                                    placeholder={"key"}
-                                    value={this.value[index].key}
-                                    onChange={(value) => (this.value[index].key = value)}
+                                    placeholder={"Host"}
+                                    value={this.value[index].destinationTmp.host}
+                                    onChange={(value) => (this.value[index].destinationTmp.host = value)}
                                 />
                                 <Input
-                                    placeholder={"value"}
-                                    value={this.value[index].value}
-                                    onChange={(value) => (this.value[index].value = value)}
+                                    placeholder={"Subset"}
+                                    value={this.value[index].destinationTmp.subset}
+                                    onChange={(value) => (this.value[index].destinationTmp.subset = value)}
+                                />
+                                <Input
+                                    placeholder={"Port"}
+                                    value={this.value[index].destinationTmp.portString}
+                                    onChange={(value) => {
+                                        this.value[index].destinationTmp.portString = value
+                                    }
+                                    }
+                                />
+                                <Input
+                                    placeholder={"Weight"}
+                                    value={this.value[index].weightString}
+                                    onChange={(value) => (this.value[index].weightString = value)}
                                 />
                             </Grid>
 
                         </Grid>
+
 
                     </Grid>
                     <Grid item xs zeroMinWidth>
@@ -86,13 +118,14 @@ export class SelectorDetails extends React.Component<Props> {
         )
     }
 
+
     render() {
         return (
             <>
                 <SubTitle
                     title={
                         <>
-                            <Trans>Selector</Trans>
+                            <Trans>Route</Trans>
               &nbsp;&nbsp;
               <Icon material={"edit"} className={"editIcon"} onClick={event => {
                                 stopPropagation(event);
@@ -102,7 +135,7 @@ export class SelectorDetails extends React.Component<Props> {
                     }>
                 </SubTitle>
                 {this.value.map((item: any, index: number) => {
-                    return this.renderHostDetail(index);
+                    return this.renderHttpRouteDetail(index);
                 })}
             </>
         );
