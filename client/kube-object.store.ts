@@ -7,10 +7,12 @@ import { configStore } from "./config.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
-import store from 'store'
+import store from "store";
 
 @autobind()
-export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
+export abstract class KubeObjectStore<
+  T extends KubeObject = any
+> extends ItemStore<T> {
   abstract api: KubeApi<T>;
   public limit: number;
 
@@ -23,61 +25,59 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
     if (namespaces.length) {
-      return this.items.filter(item => namespaces.includes(item.getNs()));
-    }
-    else if (!strict) {
+      return this.items.filter((item) => namespaces.includes(item.getNs()));
+    } else if (!strict) {
       return this.items;
     }
   }
 
   getByName(name: string, namespace?: string): T {
-    return this.items.find(item => {
-      return item.getName() === name && (
-        namespace ? item.getNs() === namespace : true
-      )
+    return this.items.find((item) => {
+      return (
+        item.getName() === name &&
+        (namespace ? item.getNs() === namespace : true)
+      );
     });
   }
 
   getByPath(path: string): T {
-    return this.items.find(item => item.selfLink === path);
+    return this.items.find((item) => item.selfLink === path);
   }
 
   getByLabel(labels: string[] | { [label: string]: string }): T[] {
     if (Array.isArray(labels)) {
       return this.items.filter((item: T) => {
         const itemLabels = item.getLabels();
-        return labels.every(label => itemLabels.includes(label));
-      })
-    }
-    else {
+        return labels.every((label) => itemLabels.includes(label));
+      });
+    } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
-        return Object.entries(labels)
-          .every(([key, value]) => itemLabels[key] === value)
-      })
+        return Object.entries(labels).every(
+          ([key, value]) => itemLabels[key] === value
+        );
+      });
     }
   }
   protected async loadItems(namespaces?: string[]): Promise<T[]> {
-    let isClusterAdmin = false
-    const userConfig = store.get('u_config')
+    let isClusterAdmin = false;
+    const userConfig = store.get("u_config");
     if (userConfig) {
-      isClusterAdmin = userConfig.isClusterAdmin
+      isClusterAdmin = userConfig.isClusterAdmin;
     }
     if (isClusterAdmin != true && !this.api.isNamespaced) {
-      return []
+      return [];
     }
     if (!namespaces || namespaces.length === 0) {
       const { limit } = this;
       const query: IKubeApiQueryParams = limit ? { limit } : {};
       return this.api.list({}, query);
-    }
-    else {
-      return Promise
-        .all(namespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat())
+    } else {
+      return Promise.all(
+        namespaces.map((namespace) => this.api.list({ namespace }))
+      ).then((items) => items.flat());
     }
   }
-
 
   protected filterItemsOnLoad(items: T[]) {
     return items;
@@ -92,7 +92,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       items = await this.loadItems(!isClusterAdmin ? allowedNamespaces : null);
       items = this.filterItemsOnLoad(items);
     } finally {
-
       if (items) {
         items = this.sortItems(items);
         this.items.replace(items);
@@ -102,7 +101,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItem(params: { name: string; namespace?: string }): Promise<T> {
+  protected async loadItem(params: {
+    name: string;
+    namespace?: string;
+  }): Promise<T> {
     return this.api.get(params);
   }
 
@@ -124,14 +126,22 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string, labels?: Map<string, string> }, data?: Partial<T>): Promise<T> {
+  protected async createItem(
+    params: { name: string; namespace?: string; labels?: Map<string, string> },
+    data?: Partial<T>
+  ): Promise<T> {
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string, labels?: Map<string, string> }, data?: Partial<T>): Promise<T> {
+  async create(
+    params: { name: string; namespace?: string; labels?: Map<string, string> },
+    data?: Partial<T>
+  ): Promise<T> {
     const newItem = await this.createItem(params, data);
     // if the item already in store ignore replace
-    if (this.items.findIndex(item => item.getId() === newItem.getId()) > 0) {
+    if (
+      this.items.findIndex((item) => item?.getId() === newItem?.getId()) > 0
+    ) {
       return newItem;
     }
     const items = this.sortItems([...this.items, newItem]);
@@ -140,15 +150,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   async apply(item: T, data?: Partial<T>): Promise<T> {
-    if (this.items.findIndex(item => { item.getName() == item.getName() && item.getNs() == item.getNs(); }) > 0) {
-      return this.update(item, data)
+    if (
+      this.items.findIndex((item) => {
+        item.getName() == item.getName() && item.getNs() == item.getNs();
+      }) > 0
+    ) {
+      return this.update(item, data);
     }
-    return this.create({ name: item.getName(), namespace: item.getNs() }, data)
+    return this.create({ name: item.getName(), namespace: item.getNs() }, data);
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
-    const index = this.items.findIndex(item => item.getId() === newItem.getId());
+    const index = this.items.findIndex(
+      (item) => item.getId() === newItem.getId()
+    );
     this.items.splice(index, 1, newItem);
     return newItem;
   }
@@ -164,16 +180,24 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
+  protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], {
+    deep: false,
+  });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
-      delay: delay
-    })
+    return reaction(
+      () => this.eventsBuffer.toJS()[0],
+      this.updateFromEventsBuffer,
+      {
+        delay: delay,
+      }
+    );
   }
 
   subscribe(apis = [this.api]) {
-    apis = apis.filter(api => !configStore.isClusterAdmin ? api.isNamespaced : true);
+    apis = apis.filter((api) =>
+      !configStore.isClusterAdmin ? api.isNamespaced : true
+    );
     return KubeApi.watchAll(...apis);
   }
 
@@ -192,7 +216,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     this.eventsBuffer.clear().forEach(({ type, object }) => {
       const { uid, selfLink } = object.metadata;
-      const index = items.findIndex(item => item.getId() === uid);
+      const index = items.findIndex((item) => item.getId() === uid);
       const item = items[index];
       const api = apiManager.getApi(selfLink);
 
@@ -202,8 +226,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           const newItem = new api.objectConstructor(object);
           if (!item) {
             items.push(newItem);
-          }
-          else {
+          } else {
             items.splice(index, 1, newItem);
           }
           break;
