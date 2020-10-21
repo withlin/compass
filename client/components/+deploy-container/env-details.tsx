@@ -1,22 +1,21 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { t, Trans } from "@lingui/macro";
+import { Grid, Paper } from "@material-ui/core";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Select} from "../select";
-import {Input} from "../input";
-import {computed, observable} from "mobx";
-import {environment, Environment} from "./common";
-import {SecretsSelect} from "../+config-secrets/secrets-select";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {ConfigMapsSelect} from "../+config-maps/config-maps-select";
-import {ConfigMapsKeySelect} from "../+config-maps/config-maps-key-select";
-import {SecretKeySelect} from "../+config-secrets/secret-key-select";
-import {Grid, Paper} from "@material-ui/core";
-import {stopPropagation} from "../../utils";
-import { EvnVarDetails } from "./env-details-task";
+import { ActionMeta } from "react-select/src/types";
+import { ConfigMapsKeySelect } from "../+config-maps/config-maps-key-select";
+import { ConfigMapsSelect } from "../+config-maps/config-maps-select";
+import { SecretKeySelect } from "../+config-secrets/secret-key-select";
+import { SecretsSelect } from "../+config-secrets/secrets-select";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { _i18n } from "../../i18n";
+import { stopPropagation } from "../../utils";
+import { Icon } from "../icon";
+import { Input } from "../input";
+import { SubTitle } from "../layout/sub-title";
+import { Select } from "../select";
+import { environment, Environment } from "./common";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -38,17 +37,17 @@ export class EnvironmentDetails extends React.Component<Props> {
   get selectOptions() {
     return [
       // "Custom",
+      "Normal",
       "ConfigMaps",
       "Secrets",
-      "Normal",
       // "Other"
     ]
   }
 
   add = () => {
     this.value.push({
-      type: "ConfigMaps",
-      envConfig: {"env":[]}
+      type: "Normal",
+      envConfig: {}
     });
   }
 
@@ -177,16 +176,53 @@ export class EnvironmentDetails extends React.Component<Props> {
 
   rNormal(index: number) {
     return (
-      <div>
-       <EvnVarDetails
-          value={this.value[index].envConfig.env}
-          onChange={(value) => this.value[index].envConfig.env = value}
-       />
-      </div>
+      <>
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  placeholder={_i18n._(t`Name`)}
+                  title={this.value[index].envConfig.name}
+                  value={this.value[index].envConfig.name}
+                  onChange={(value) => {
+                    this.value[index].envConfig.name = value;
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  placeholder={_i18n._(t`Value`)}
+                  title={this.value[index].envConfig.value}
+                  value={this.value[index].envConfig.value}
+                  onChange={(value) => {
+                    this.value[index].envConfig.value = value;
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs zeroMinWidth>
+            <Icon
+              small
+              tooltip={_i18n._(t`Remove`)}
+              className="remove-icon"
+              material="clear"
+              onClick={(event) => {
+                this.remove(index);
+                stopPropagation(event)
+              }}
+            />
+          </Grid>
+        </Grid>
+      </>
     )
   }
-  render() {
 
+
+  render() {
     return (
       <>
         <SubTitle
@@ -201,6 +237,7 @@ export class EnvironmentDetails extends React.Component<Props> {
             </>
           }>
         </SubTitle>
+
         <div className="Environment">
           {this.value.map((item: any, index: number) => {
             return (
