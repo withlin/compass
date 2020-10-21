@@ -1,9 +1,9 @@
-import * as path from "path";
-import * as webpack from "webpack";
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
+import * as path from "path";
 import * as TerserWebpackPlugin from "terser-webpack-plugin";
-import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
+import * as webpack from "webpack";
+import { BUILD_DIR, clientVars, CLIENT_DIR, config } from "./server/config";
 
 const os = require('os');
 
@@ -41,46 +41,46 @@ export default () => {
       publicPath: '',
       proxy: {
         '/base': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,
           changeOrigin: true,
           // pathRewrite: { '^/base': '' }
         },
         '/api-kube': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-kube': '/workload' },
         },
         '/api-resource': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-resource': '/workload' }
         },
 
         '/user-login': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         },
 
         '/api/config': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api/config': '/workload/config' }
         },
 
         '/api': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api': '/workload' }
         },
 
         '/workload': {
-          target: 'http://10.200.65.195:8080/',
+          target: 'http://127.0.0.1:8080/',
           ws: true,
           secure: false,
           logLevel: 'debug',

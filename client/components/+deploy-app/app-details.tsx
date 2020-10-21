@@ -1,15 +1,14 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { t, Trans } from "@lingui/macro";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {t, Trans} from "@lingui/macro";
-import {Select, SelectOption} from "../select";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {Icon} from "../icon";
-import {computed, observable} from "mobx";
-import {app, App} from "./common";
-import {systemName} from "../input/input.validators";
+import { ActionMeta } from "react-select/src/types";
+import { _i18n } from "../../i18n";
+import { Input } from "../input";
+import { systemName } from "../input/input.validators";
+import { SubTitle } from "../layout/sub-title";
+import { Select } from "../select";
+import { app, App } from "./common";
 
 interface Props<T = any> extends Partial<Props> {
   showIcons?: boolean;
@@ -39,7 +38,7 @@ export class AppDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title={<Trans>App Type 2121</Trans>}/>
+        <SubTitle title={<Trans>App Type</Trans>} />
         <Select
           options={this.typeOptions}
           value={this.value.type}
