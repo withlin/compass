@@ -79,7 +79,7 @@ export class WorkloadEntry extends KubeObject {
 
 export const workloadEntryApi = new KubeApi({
   kind: WorkloadEntry.kind,
-  apiBase: "/apis/networking.istio.io/v1beta1/workloadentrys",
+  apiBase: "/apis/networking.istio.io/v1beta1/workloadentries",
   isNamespaced: true,
   objectConstructor: WorkloadEntry,
 });

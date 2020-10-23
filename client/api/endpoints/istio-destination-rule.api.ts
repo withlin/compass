@@ -20,13 +20,13 @@ export interface DestinationRuleSpec {
   // qualified domain names over short names._
   //
   // Note that the host field applies to both HTTP and TCP services.
-  Host?: string;
+  host?: string;
   // Traffic policies to apply (load balancing policy, connection pool
   // sizes, outlier detection).
-  TrafficPolicy?: TrafficPolicy;
+  trafficPolicy?: TrafficPolicy;
   // One or more named sets that represent individual versions of a
   // service. Traffic policies can be overridden at subset level.
-  Subsets?: Subset[];
+  subsets?: Subset[];
   // A list of namespaces to which this destination rule is exported.
   // The resolution of a destination rule to apply to a service occurs in the
   // context of a hierarchy of namespaces. Exporting a destination rule allows
@@ -41,7 +41,7 @@ export interface DestinationRuleSpec {
   // The value "." is reserved and defines an export to the same namespace that
   // the destination rule is declared in. Similarly, the value "*" is reserved and
   // defines an export to all namespaces.
-  ExportTo?: string[];
+  exportTo?: string[];
 }
 
 // **Note:** Policies specified for subsets will not take effect until
@@ -55,34 +55,34 @@ export interface DestinationRuleSpec {
 export interface Subset {
   // Name of the subset. The service name and the subset name can
   // be used for traffic splitting in a route rule.
-  Name: string;
+  name: string;
   // Labels apply a filter over the endpoints of a service in the
   // service registry. See route rules for examples of usage.
-  Labels?: Map<string, string>;
+  labels?: Map<string, string>;
   // Traffic policies that apply to this subset. Subsets inherit the
   // traffic policies specified at the DestinationRule level. Settings
   // specified at the subset level will override the corresponding settings
   // specified at the DestinationRule level.
-  TrafficPolicy?: TrafficPolicy;
+  trafficPolicy?: TrafficPolicy;
 }
 
 // Traffic policies to apply for a specific destination, across all
 // destination ports. See DestinationRule for examples.
 export interface TrafficPolicy {
   // Settings controlling the load balancer algorithms.
-  LoadBalancer?: LoadBalancerSettings;
+  loadBalancer?: LoadBalancerSettings;
   // Settings controlling the volume of connections to an upstream service
-  ConnectionPool?: ConnectionPoolSettings;
+  connectionPool?: ConnectionPoolSettings;
   // Settings controlling eviction of unhealthy hosts from the load balancing pool
-  OutlierDetection?: OutlierDetection;
+  outlierDetection?: OutlierDetection;
   // TLS related settings for connections to the upstream service.
-  Tls?: ClientTLSSettings;
+  tls?: ClientTLSSettings;
   // Traffic policies specific to individual ports. Note that port level
   // settings will override the destination-level settings. Traffic
   // settings specified at the destination-level will not be inherited when
   // overridden by port-level settings, i.e. default values will be applied
   // to fields omitted in port-level traffic policies.
-  PortLevelSettings?: TrafficPolicy_PortTrafficPolicy[];
+  portLevelSettings?: TrafficPolicy_PortTrafficPolicy[];
 }
 
 // Traffic policies that apply to specific ports of the service
@@ -90,41 +90,41 @@ export interface TrafficPolicy_PortTrafficPolicy {
   // Specifies the number of a port on the destination service
   // on which this policy is being applied.
   //
-  Port?: PortSelector;
+  port?: PortSelector;
   // Settings controlling the load balancer algorithms.
-  LoadBalancer?: LoadBalancerSettings;
+  loadBalancer?: LoadBalancerSettings;
   // Settings controlling the volume of connections to an upstream service
-  ConnectionPool?: ConnectionPoolSettings;
+  connectionPool?: ConnectionPoolSettings;
   // Settings controlling eviction of unhealthy hosts from the load balancing pool
-  OutlierDetection?: OutlierDetection;
+  outlierDetection?: OutlierDetection;
   // TLS related settings for connections to the upstream service.
-  Tls?: ClientTLSSettings;
+  tls?: ClientTLSSettings;
 }
 
 // PortSelector specifies the number of a port to be used for
 // matching or selection for final routing.
 export interface PortSelector {
   // Valid port number
-  Number?: number;
+  number?: number;
 }
 
 export interface ClientTLSSettings {
   // Indicates whether connections to this port should be secured
   // using TLS. The value of this field determines how TLS is enforced.
-  Mode: ClientTLSSettings_TLSmode;
+  mode: ClientTLSSettings_TLSmode;
   // REQUIRED if mode is `MUTUAL`. The path to the file holding the
   // client-side TLS certificate to use.
   // Should be empty if mode is `ISTIO_MUTUAL`.
-  ClientCertificate: string;
+  clientCertificate: string;
   // REQUIRED if mode is `MUTUAL`. The path to the file holding the
   // client's private key.
   // Should be empty if mode is `ISTIO_MUTUAL`.
-  PrivateKey: string;
+ privateKey: string;
   // OPTIONAL: The path to the file containing certificate authority
   // certificates to use in verifying a presented server certificate. If
   // omitted, the proxy will not verify the server's certificate.
   // Should be empty if mode is `ISTIO_MUTUAL`.
-  CaCertificates: string;
+  caCertificates: string;
   // The name of the secret that holds the TLS certs for the
   // client including the CA certificates. Secret must exist in the
   // same namespace with the proxy using the certificates.
@@ -138,15 +138,15 @@ export interface ClientTLSSettings {
   //
   // **NOTE:** This field is currently applicable only at gateways.
   // Sidecars will continue to use the certificate paths.
-  CredentialName: string;
+  credentialName: string;
   // A list of alternate names to verify the subject identity in the
   // certificate. If specified, the proxy will verify that the server
   // certificate's subject alt name matches one of the specified values.
   // If specified, this list overrides the value of subject_alt_names
   // from the ServiceEntry.
-  SubjectAltNames: string[];
+  subjectAltNames: string[];
   // SNI string to present to the server during TLS handshake.
-  Sni: string;
+  sni: string;
 }
 
 export enum ClientTLSSettings_TLSmode {
@@ -172,7 +172,7 @@ export interface OutlierDetection {
   // is accessed over an opaque TCP connection, connect timeouts and
   // connection error/failure events qualify as an error.
   // $hide_from_docs
-  ConsecutiveErrors?: number; // Deprecated: Do not use.
+  consecutiveErrors?: number; // Deprecated: Do not use.
   // Number of gateway errors before a host is ejected from the connection pool.
   // When the upstream host is accessed over HTTP, a 502, 503, or 504 return
   // code qualifies as a gateway error. When the upstream host is accessed over
@@ -186,7 +186,7 @@ export interface OutlierDetection {
   // if the value of consecutive_gateway_errors is greater than or equal to
   // the value of consecutive_5xx_errors, consecutive_gateway_errors will have
   // no effect.
-  ConsecutiveGatewayErrors?: number | string;
+  consecutiveGatewayErrors?: number | string;
   // Number of 5xx errors before a host is ejected from the connection pool.
   // When the upstream host is accessed over an opaque TCP connection, connect
   // timeouts, connection error/failure and request failure events qualify as a
@@ -199,19 +199,19 @@ export interface OutlierDetection {
   // if the value of consecutive_gateway_errors is greater than or equal to
   // the value of consecutive_5xx_errors, consecutive_gateway_errors will have
   // no effect.
-  Consecutive_5XxErrors?: number | string;
+  consecutive_5XxErrors?: number | string;
   // Time interval between ejection sweep analysis. format:
   // 1h/1m/1s/1ms. MUST BE >=1ms. Default is 10s.
-  Interval?: string | Date;
+  interval?: string | Date;
   // Minimum ejection duration. A host will remain ejected for a period
   // equal to the product of minimum ejection duration and the number of
   // times the host has been ejected. This technique allows the system to
   // automatically increase the ejection period for unhealthy upstream
   // servers. format: 1h/1m/1s/1ms. MUST BE >=1ms. Default is 30s.
-  BaseEjectionTime: string | Date;
+  baseEjectionTime: string | Date;
   // Maximum % of hosts in the load balancing pool for the upstream
   // service that can be ejected. Defaults to 10%.
-  MaxEjectionPercent: number;
+  maxEjectionPercent: number;
   // Outlier detection will be enabled as long as the associated load balancing
   // pool has at least min_health_percent hosts in healthy mode. When the
   // percentage of healthy hosts in the load balancing pool drops below this
@@ -219,39 +219,39 @@ export interface OutlierDetection {
   // across all hosts in the pool (healthy and unhealthy). The threshold can be
   // disabled by setting it to 0%. The default is 0% as it's not typically
   // applicable in k8s environments with few pods per service.
-  MinHealthPercent?: number;
+  minHealthPercent?: number;
 }
 
 export interface ConnectionPoolSettings {
   // Settings common to both HTTP and TCP upstream connections.
-  Tcp?: ConnectionPoolSettings_TCPSettings;
+  tcp?: ConnectionPoolSettings_TCPSettings;
   // HTTP connection pool settings.
-  Http: ConnectionPoolSettings_HTTPSettings;
+  http: ConnectionPoolSettings_HTTPSettings;
 }
 
 // Settings applicable to HTTP1.1/HTTP2/GRPC connections.
 export interface ConnectionPoolSettings_HTTPSettings {
   // Maximum number of pending HTTP requests to a destination. Default 2^32-1.
-  Http1MaxPendingRequests?: number;
+  http1MaxPendingRequests?: number;
   // Maximum number of requests to a backend. Default 2^32-1.
-  Http2MaxRequests?: number;
+  http2MaxRequests?: number;
   // Maximum number of requests per connection to a backend. Setting this
   // parameter to 1 disables keep alive. Default 0, meaning "unlimited",
   // up to 2^29.
-  MaxRequestsPerConnection?: number;
+  maxRequestsPerConnection?: number;
   // Maximum number of retries that can be outstanding to all hosts in a
   // cluster at a given time. Defaults to 2^32-1.
-  MaxRetries?: number;
+  maxRetries?: number;
   // The idle timeout for upstream connection pool connections. The idle timeout is defined as the period in which there are no active requests.
   // If not set, the default is 1 hour. When the idle timeout is reached the connection will be closed.
   // Note that request based timeouts mean that HTTP/2 PINGs will not keep the connection alive. Applies to both HTTP1.1 and HTTP2 connections.
-  IdleTimeout: string | Date;
+  idleTimeout: string | Date;
   // Specify if http1.1 connection should be upgraded to http2 for the associated destination.
-  H2UpgradePolicy: ConnectionPoolSettings_HTTPSettings_H2UpgradePolicy;
+  h2UpgradePolicy: ConnectionPoolSettings_HTTPSettings_H2UpgradePolicy;
   // If set to true, client protocol will be preserved while initiating connection to backend.
   // Note that when this is set to true, h2_upgrade_policy will be ineffective i.e. the client
   // connections will not be upgraded to http2.
-  UseClientProtocol: boolean;
+  useClientProtocol: boolean;
 }
 
 export enum ConnectionPoolSettings_HTTPSettings_H2UpgradePolicy {
@@ -263,11 +263,11 @@ export enum ConnectionPoolSettings_HTTPSettings_H2UpgradePolicy {
 // Settings common to both HTTP and TCP upstream connections.
 export interface ConnectionPoolSettings_TCPSettings {
   // Maximum number of HTTP1 /TCP connections to a destination host. Default 2^32-1.
-  MaxConnections: number;
+  maxConnections: number;
   // TCP connection timeout.
-  ConnectTimeout: string | Date;
+  connectTimeout: string;
   // If set then set SO_KEEPALIVE on the socket to enable TCP Keepalives.
-  TcpKeepalive: ConnectionPoolSettings_TCPSettings_TcpKeepalive;
+  tcpKeepalive: ConnectionPoolSettings_TCPSettings_TcpKeepalive;
 }
 
 // TCP keepalive.
@@ -275,15 +275,15 @@ export interface ConnectionPoolSettings_TCPSettings_TcpKeepalive {
   // Maximum number of keepalive probes to send without response before
   // deciding the connection is dead. Default is to use the OS level configuration
   // (unless overridden, Linux defaults to 9.)
-  Probes?: number;
+  probes?: number;
   // The time duration a connection needs to be idle before keep-alive
   // probes start being sent. Default is to use the OS level configuration
   // (unless overridden, Linux defaults to 7200s (ie 2 hours.)
-  Time?: string | Date;
+  time?: string ;
   // The time duration between keep-alive probes.
   // Default is to use the OS level configuration
   // (unless overridden, Linux defaults to 75s.)
-  Interval?: string | Date;
+  interval?: string;
 }
 
 export interface LoadBalancerSettings {
@@ -292,10 +292,10 @@ export interface LoadBalancerSettings {
   // Types that are valid to be assigned to LbPolicy:
   //	*LoadBalancerSettings_Simple
   //	*LoadBalancerSettings_ConsistentHash
-  LbPolicy?: string;
+  lbPolicy?: string;
   // Locality load balancer settings, this will override mesh wide settings in entirety, meaning no merging would be performed
   // between this object and the object one in MeshConfig
-  LocalityLbSetting?: LocalityLoadBalancerSetting;
+  localityLbSetting?: LocalityLoadBalancerSetting;
 }
 
 // Locality load balancing settings.
@@ -304,15 +304,15 @@ export interface LocalityLoadBalancerSetting {
   // Explicitly specify loadbalancing weight across different zones and geographical locations.
   // Refer to [Locality weighted load balancing](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/locality_weight)
   // If empty, the locality weight is set according to the endpoints number within it.
-  Distribute?: LocalityLoadBalancerSetting_Distribute[];
+  distribute?: LocalityLoadBalancerSetting_Distribute[];
   // Optional: only failover or distribute can be set.
   // Explicitly specify the region traffic will land on when endpoints in local region becomes unhealthy.
   // Should be used together with OutlierDetection to detect unhealthy endpoints.
   // Note: if no OutlierDetection specified, this will not take effect.
-  Failover?: LocalityLoadBalancerSetting_Failover[];
+  failover?: LocalityLoadBalancerSetting_Failover[];
   // enable locality load balancing, this is DestinationRule-level and will override mesh wide settings in entirety.
   // e.g. true means that turn on locality load balancing for this DestinationRule no matter what mesh wide settings is.
-  Enabled?: boolean;
+  enabled?: boolean;
 }
 
 // Specify the traffic failover policy across regions. Since zone and sub-zone
@@ -324,10 +324,10 @@ export interface LocalityLoadBalancerSetting {
 // like regulatory controls.
 export interface LocalityLoadBalancerSetting_Failover {
   // Originating region.
-  From?: string;
+  from?: string;
   // Destination region the traffic will fail over to when endpoints in
   // the 'from' region becomes unhealthy.
-  To?: string;
+  to?: string;
 }
 
 // Describes how traffic originating in the 'from' zone or sub-zone is
@@ -339,11 +339,11 @@ export interface LocalityLoadBalancerSetting_Failover {
 // us-west/zone-1/* - all sub-zones within us-west/zone-1
 export interface LocalityLoadBalancerSetting_Distribute {
   // Originating locality, '/' separated, e.g. 'region/zone/sub_zone'.
-  From: string;
+  from: string;
   // Map of upstream localities to traffic distribution weights. The sum of
   // all weights should be == 100. Any locality not assigned a weight will
   // receive no traffic.
-  To?: Map<string, number>;
+  to?: Map<string, number>;
 }
 
 @autobind()

@@ -150,7 +150,6 @@ export class VirtualServiceDialog extends React.Component<Props> {
         try {
 
             let resultHTTPRoutes: HTTPRoute[] = [];
-            console.log(this.virtualServiceDetail?.defaultHttp);
             this.virtualServiceDetail?.defaultHttp?.map((item) => {
 
                 let tmpHttpRoute: HTTPRoute = {};
