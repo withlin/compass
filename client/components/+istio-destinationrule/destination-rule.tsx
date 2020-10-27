@@ -9,6 +9,7 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { MenuItem } from "../menu";
+import { DestinationRuleDialog } from "./add-destinationrule-dialog"
 
 enum sortBy {
     name = "name",
@@ -65,7 +66,15 @@ export class DestinationRules extends React.Component<Props> {
                     renderItemMenu={(item: DestinationRule) => {
                         return <DestinationRuleMenu object={item} />;
                     }}
+                    addRemoveButtons={{
+                        addTooltip: <Trans>DestinationRule</Trans>,
+                        onAdd: () => {
+                            DestinationRuleDialog.open();
+                        },
+                    }}
                 />
+
+                <DestinationRuleDialog />
             </>
         );
     }
