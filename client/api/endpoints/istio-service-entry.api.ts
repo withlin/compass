@@ -51,15 +51,15 @@ export interface ServiceEntrySpec {
   ports?: Port[];
   // Specify whether the service should be considered external to the mesh
   // or part of the mesh.
-  location: ServiceEntry_Location;
+  location?: string;
   // Service discovery mode for the hosts. Care must be taken
   // when setting the resolution mode to NONE for a TCP port without
   // accompanying IP addresses. In such cases, traffic to any IP on
   // said port will be allowed (i.e. `0.0.0.0:<port>`).
-  resolution: ServiceEntry_Resolution;
+  resolution?: string;
   // One or more endpoints associated with the service. Only one of
   // `endpoints` or `workloadSelector` can be specified.
-  endpoints: WorkloadEntrySpec;
+  endpoints?: WorkloadEntrySpec;
   // Applicable only for MESH_INTERNAL services. Only one of
   // `endpoints` or `workloadSelector` can be specified. Selects one
   // or more Kubernetes pods or VM workloads (specified using
@@ -91,7 +91,7 @@ export interface ServiceEntrySpec {
   // service account specified in the workloadEntry will also be used
   // to derive the additional subject alternate names that should be
   // verified.
-  subjectAltNames: string[];
+  subjectAltNames?: string[];
 }
 
 // `WorkloadSelector` specifies the criteria used to determine if the `Gateway`,
@@ -166,7 +166,7 @@ export class ServiceEntry extends KubeObject {
 
 export const serviceEntryApi = new KubeApi({
   kind: ServiceEntry.kind,
-  apiBase: "/apis/networking.istio.io/v1beta1/serviceentrys",
+  apiBase: "/apis/networking.istio.io/v1beta1/serviceentries",
   isNamespaced: true,
   objectConstructor: ServiceEntry,
 });
