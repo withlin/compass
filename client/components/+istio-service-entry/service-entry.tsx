@@ -9,6 +9,7 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { MenuItem } from "../menu";
+import { ServiceEntryDialog } from "./add-service-entry.dialog"
 
 enum sortBy {
     name = "name",
@@ -65,7 +66,14 @@ export class ServiceEntrys extends React.Component<Props> {
                     renderItemMenu={(item: ServiceEntry) => {
                         return <ServiceEntryMenu object={item} />;
                     }}
+                    addRemoveButtons={{
+                        addTooltip: <Trans>ServiceEntry</Trans>,
+                        onAdd: () => {
+                            ServiceEntryDialog.open();
+                        },
+                    }}
                 />
+                <ServiceEntryDialog />
             </>
         );
     }
