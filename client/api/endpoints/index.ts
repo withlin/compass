@@ -51,6 +51,7 @@ export * from "./tenant-department.api";
 export * from "./tenant-user";
 export * from "./tenant-role.api";
 export * from "./subnet.api";
+export * from "./network-attachment-definitions.api";
 export * from "./istio-destination-rule.api";
 export * from "./istio-gateway.api";
 export * from "./istio-service-entry.api";
