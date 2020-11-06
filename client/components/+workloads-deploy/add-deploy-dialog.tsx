@@ -1,20 +1,20 @@
 import "./add-deploy-dialog.scss"
 
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {Trans} from "@lingui/macro";
-import {Wizard, WizardStep} from "../wizard";
-import {Container, container, MultiContainerDetails} from "../+deploy-container";
-import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
-import {app, App} from "../+deploy-app";
-import {AppDetails} from "../+deploy-app";
-import {deployStore} from "./deploy.store";
-import {Notifications} from "../notifications";
-import {configStore} from "../../config.store";
-import {Collapse} from "../collapse";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Trans } from "@lingui/macro";
+import { Wizard, WizardStep } from "../wizard";
+import { Container, container, MultiContainerDetails } from "../+deploy-container";
+import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
+import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim";
+import { app, App } from "../+deploy-app";
+import { AppDetails } from "../+deploy-app";
+import { deployStore } from "./deploy.store";
+import { Notifications } from "../notifications";
+import { configStore } from "../../config.store";
+import { Collapse } from "../collapse";
 
 interface Props extends DialogProps {
 }
@@ -27,6 +27,7 @@ export class AddDeployDialog extends React.Component<Props> {
   @observable service: Service = deployService;
   @observable containers: Container[] = [container];
   @observable volumeClaims: VolumeClaimTemplate[] = [];
+
 
   static open() {
     AddDeployDialog.isOpen = true;
@@ -50,10 +51,11 @@ export class AddDeployDialog extends React.Component<Props> {
 
   addDeployDialog = async () => {
 
-    const {app, containers, service, volumeClaims} = this;
+    const { app, containers, service, volumeClaims } = this;
     const name = app.name + '-' + Math.floor(Date.now() / 1000)
 
     try {
+
       await deployStore.create(
         {
           name: name,
@@ -92,21 +94,21 @@ export class AddDeployDialog extends React.Component<Props> {
         <Wizard className={"AddDeployWizard"} header={header} done={this.close}>
           <WizardStep className={"AddDeployWizardStep"} contentClass="flex gaps column" next={this.addDeployDialog}>
             <div className="init-form">
-              <AppDetails value={this.app} onChange={value => this.app = value}/>
-              <br/>
+              <AppDetails value={this.app} onChange={value => this.app = value} />
+              <br />
               <Collapse panelName={<Trans>Containers</Trans>} key={"containers"}>
                 <MultiContainerDetails value={this.containers}
-                                       onChange={value => this.containers = value}/>
+                  onChange={value => this.containers = value} />
               </Collapse>
-              <br/>
+              <br />
               <Collapse panelName={<Trans>Service</Trans>} key={"services"}>
                 <DeployServiceDetails value={this.service}
-                                      onChange={value => this.service = value}/>
+                  onChange={value => this.service = value} />
               </Collapse>
-              <br/>
+              <br />
               <Collapse panelName={<Trans>Volume</Trans>} key={"volume"}>
                 <MultiVolumeClaimDetails value={this.volumeClaims}
-                                         onChange={value => this.volumeClaims = value}/>
+                  onChange={value => this.volumeClaims = value} />
               </Collapse>
             </div>
           </WizardStep>

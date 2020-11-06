@@ -1,25 +1,25 @@
 import "./add-department-dialog.scss"
 
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { computed, observable } from "mobx";
 import {
   TenantDepartment,
   tenantDepartmentApi,
   Namespace,
   tenantRoleApi, TenantRole, Stack
 } from "../../api/endpoints";
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {systemName} from "../input/input.validators";
-import {Notifications} from "../notifications";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {Select, SelectOption} from "../select";
-import {StackDetails} from "./stack-details";
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { systemName } from "../input/input.validators";
+import { Notifications } from "../notifications";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { Select, SelectOption } from "../select";
+import { StackDetails } from "./stack-details";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -38,7 +38,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
   }
 
   @observable name = "";
-  @observable namespaces = observable.array<Namespace>([], {deep: false});
+  @observable namespaces = observable.array<Namespace>([], { deep: false });
   @observable defaultNamespace = "";
   @observable gits: Stack[] = [];
   @observable registers: Stack[] = [];
@@ -60,7 +60,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
   }
 
   createDepartment = async () => {
-    const {name} = this;
+    const { name } = this;
     const department: Partial<TenantDepartment> = {
       spec: {
         namespace: this.selectedNamespaces,
@@ -83,9 +83,9 @@ export class AddDepartmentDialog extends React.Component<Props> {
     }
 
     try {
-      await tenantDepartmentApi.create({namespace: "kube-system", name: name}, department);
-      await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-admin'}, departmentAdminRole);
-      await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-employee'}, departmentEmployeeRole);
+      await tenantDepartmentApi.create({ namespace: "kube-system", name: name }, department);
+      await tenantRoleApi.create({ namespace: "kube-system", name: name + '-dept-admin' }, departmentAdminRole);
+      await tenantRoleApi.create({ namespace: "kube-system", name: name + '-dept-employee' }, departmentEmployeeRole);
       this.reset();
       Notifications.ok(
         <>Department {name} save succeeded</>
@@ -97,8 +97,8 @@ export class AddDepartmentDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
-    const {name} = this;
+    const { ...dialogProps } = this.props;
+    const { name } = this;
     const unwrapNamespaces = (options: SelectOption[]) => options.map(option => option.value);
     const header = <h5><Trans>Create Department</Trans></h5>;
     return (
@@ -110,9 +110,9 @@ export class AddDepartmentDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
-                      next={this.createDepartment}>
+            next={this.createDepartment}>
             <div className="department-name">
-              <SubTitle title={<Trans>Department name</Trans>}/>
+              <SubTitle title={<Trans>Department name</Trans>} />
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
@@ -121,7 +121,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
               />
             </div>
             <div className="namespace">
-              <SubTitle title={<Trans>Namespace</Trans>}/>
+              <SubTitle title={<Trans>Namespace</Trans>} />
               <NamespaceSelect
                 isMulti
                 value={this.namespaces}
@@ -135,7 +135,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
               />
             </div>
             <div className="default_namespace">
-              <SubTitle title={<Trans>Default Namespace</Trans>}/>
+              <SubTitle title={<Trans>Default Namespace</Trans>} />
               <Select
                 value={this.defaultNamespace}
                 placeholder={_i18n._(t`Default Namespace`)}
@@ -145,10 +145,10 @@ export class AddDepartmentDialog extends React.Component<Props> {
                 onChange={value => this.defaultNamespace = value.value}
               />
             </div>
-            <br/>
-            <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
-            <br/>
-            <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
+            <br />
+            <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value} />
+            <br />
+            <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value} />
           </WizardStep>
         </Wizard>
       </Dialog>

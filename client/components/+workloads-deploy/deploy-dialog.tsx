@@ -12,6 +12,11 @@ import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { apiBase } from "../../api";
 import { Notifications } from "../notifications";
 import { NamespaceAllowStorageClassSelect } from "../+namespaces/namespace-allow-storageclass-select";
+import { MultusCniNameSelect } from "../+deploy-multus-cni/multus-name-select";
+import { SelectOption } from "../select";
+import {
+  NetworkAttachmentDefinition,
+} from "../../api/endpoints";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -25,6 +30,8 @@ export class DeployDialog extends React.Component<Props> {
   @observable namespace = "";
   @observable replicas = "1";
   @observable storageClass = "";
+  // @observable networkCard = observable.array<string>([], { deep: false });
+  @observable networkCard = "";
 
   static open(appName: string, templateName: string) {
     DeployDialog.isOpen = true;
@@ -55,13 +62,31 @@ export class DeployDialog extends React.Component<Props> {
   }
 
   updateDeploy = async () => {
+    // k8s.v1.cni.cncf.io/networks: '[
+    //   { "name" : "macvlan-conf1" }, 
+    //   { "name" : "macvlan-conf" }
+    // ]'
+    // let keyPair: Map<string, string> = new Map<string, string>();
+    // keyPair.set("name", this.networkCard);
+    // this.networkCard.map((item) => {
+    //   keyPair.set("name", item)
+    // });
+    // console.log(this.networkCard);
+
+    let cniNameMap: Map<string, string> = new Map<string, string>();
+    // let a = `${}`;
+    cniNameMap.set("k8s.v1.cni.cncf.io/networks", this.networkCard);
+
     const data = {
+      annotations: Object.fromEntries(cniNameMap),
       appName: this.appName,
       templateName: this.templateName,
       storageClass: this.storageClass,
       namespace: this.namespace,
       replicas: this.replicas,
     }
+
+
     try {
       await apiBase.post("/deploy", { data }).then((data) => {
         this.reset();
@@ -78,6 +103,7 @@ export class DeployDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const header = <h5><Trans>Deploy</Trans></h5>;
+    // const unwrapCNiName = (options: SelectOption[]) => options.map(option => option.value);
     return (
       <Dialog
         {...dialogProps}
@@ -97,6 +123,20 @@ export class DeployDialog extends React.Component<Props> {
                 className="box grow"
                 onChange={(v) => this.namespace = v.value}
               />
+
+              <SubTitle title={<Trans>NetworkCard</Trans>} />
+              <MultusCniNameSelect
+                namespace={this.namespace}
+                placeholder={_i18n._(t`NetworkCard`)}
+                themeName="light"
+                className="box grow"
+                onChange={(v) => this.networkCard = v.value}
+              // onChange={(opts: SelectOption[]) => {
+              //   if (!opts) opts = [];
+              //   this.networkCard.replace(unwrapCNiName(opts));
+              // }}
+              />
+
 
               <SubTitle title={<Trans>StorageClass</Trans>} />
               <NamespaceAllowStorageClassSelect
