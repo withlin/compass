@@ -6,6 +6,11 @@ import {Trans} from "@lingui/macro";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {IPs, ipRoute, ipURL} from "../+ovn-ips";
 import {SubNets, subNetURL, subNetRoute} from "../+ovn-subnets";
+import {
+    networkAttachmentDefinitionRoute,
+    NetworkAttachmentDefinitions,
+    networkAttachmentDefinitionURL
+} from "../+ovn-network-attachment-definition";
 
 interface Props extends RouteComponentProps {
 }
@@ -25,6 +30,12 @@ export class Ovn extends React.Component<Props> {
                 component: SubNets,
                 url: subNetURL({query}),
                 path: subNetRoute.path,
+            },
+            {
+                title: <Trans>NetworkAttachmentDefinition</Trans>,
+                component: NetworkAttachmentDefinitions,
+                url: networkAttachmentDefinitionURL({query}),
+                path: networkAttachmentDefinitionRoute.path,
             },
         ];
     }
