@@ -75,7 +75,10 @@ export class DeployDialog extends React.Component<Props> {
 
     let cniNameMap: Map<string, string> = new Map<string, string>();
     // let a = `${}`;
-    cniNameMap.set("k8s.v1.cni.cncf.io/networks", this.networkCard);
+    if (this.networkCard !== "") {
+      cniNameMap.set("k8s.v1.cni.cncf.io/networks", this.networkCard);
+
+    }
 
     const data = {
       annotations: Object.fromEntries(cniNameMap),
@@ -124,10 +127,10 @@ export class DeployDialog extends React.Component<Props> {
                 onChange={(v) => this.namespace = v.value}
               />
 
-              <SubTitle title={<Trans>NetworkCard</Trans>} />
+              <SubTitle title={<Trans>Multus NetWorkcat</Trans>} />
               <MultusCniNameSelect
                 namespace={this.namespace}
-                placeholder={_i18n._(t`NetworkCard`)}
+                placeholder={_i18n._(t`Multus NetWorkCat`)}
                 themeName="light"
                 className="box grow"
                 onChange={(v) => this.networkCard = v.value}
