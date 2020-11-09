@@ -32,6 +32,7 @@ export class DeployDialog extends React.Component<Props> {
   @observable storageClass = "";
   // @observable networkCard = observable.array<string>([], { deep: false });
   @observable networkCard = "";
+  @observable cniNameMap = new Map<string, string>();
 
   static open(appName: string, templateName: string) {
     DeployDialog.isOpen = true;
@@ -59,6 +60,8 @@ export class DeployDialog extends React.Component<Props> {
     DeployDialog.appName = "";
     DeployDialog.templateName = "";
     this.namespace = "";
+    this.networkCard = "";
+    this.cniNameMap = new Map<string, string>();
   }
 
   updateDeploy = async () => {
@@ -73,15 +76,15 @@ export class DeployDialog extends React.Component<Props> {
     // });
     // console.log(this.networkCard);
 
-    let cniNameMap: Map<string, string> = new Map<string, string>();
+    // let cniNameMap: Map<string, string> = new Map<string, string>();
     // let a = `${}`;
     if (this.networkCard !== "") {
-      cniNameMap.set("k8s.v1.cni.cncf.io/networks", this.networkCard);
+      this.cniNameMap.set("k8s.v1.cni.cncf.io/networks", this.networkCard);
 
     }
 
     const data = {
-      annotations: Object.fromEntries(cniNameMap),
+      annotations: Object.fromEntries(this.cniNameMap),
       appName: this.appName,
       templateName: this.templateName,
       storageClass: this.storageClass,
