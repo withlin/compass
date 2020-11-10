@@ -1,7 +1,6 @@
 import * as React from "react";
 import {observer} from "mobx-react";
 import {RouteComponentProps} from "react-router";
-import {t, Trans} from "@lingui/macro";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {INetworkAttachmentDefinitionRouteParams} from "./network-attachment-definition.route";
@@ -12,6 +11,9 @@ import {
   networkAttachmentDefinitionApi
 } from "../../api/endpoints";
 import {AddNetworkAttachmentDefinitionDialog} from "./add-network-attachment-definition-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {ConfigNetworkAttachmentDefinitionDialog} from "./config-network-attachment-definition-dialog";
 
 enum sortBy {
   name = "name",
@@ -29,7 +31,7 @@ export class NetworkAttachmentDefinitions extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
-          onDetails={(obj:NetworkAttachmentDefinition ) => {console.log(obj.getConfig())}}
+          onDetails={() => {}}
           className="NetworkAttachmentDefinition"
           store={networkAttachmentDefinitionStore}
           sortingCallbacks={{
@@ -39,11 +41,11 @@ export class NetworkAttachmentDefinitions extends React.Component<Props> {
           searchFilters={[
             (item: NetworkAttachmentDefinition) => item.getSearchFields()
           ]}
-          renderHeaderTitle={<Trans>NetworkAttachmentDefinition</Trans>}
+          renderHeaderTitle={`NetworkAttachmentDefinition`}
           renderTableHeader={[
-            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>Namespace</Trans>, className: "namespace"},
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            {title: `Name`, className: "name", sortBy: sortBy.name},
+            {title: `Namespace`, className: "namespace"},
+            {title: `Age`, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(field: NetworkAttachmentDefinition) => [
             field.getName(),
@@ -54,20 +56,28 @@ export class NetworkAttachmentDefinitions extends React.Component<Props> {
             return <NetworkAttachmentDefinitionMenu object={item}/>
           }}
           addRemoveButtons={{
-            addTooltip: <Trans>Add NetworkAttachmentDefinition</Trans>,
+            addTooltip: `Add NetworkAttachmentDefinition`,
             onAdd: () => AddNetworkAttachmentDefinitionDialog.open(),
           }}
         />
         <AddNetworkAttachmentDefinitionDialog />
+        <ConfigNetworkAttachmentDefinitionDialog />
       </>
     );
   }
 }
 
 export function NetworkAttachmentDefinitionMenu(props: KubeObjectMenuProps<NetworkAttachmentDefinition>) {
-
+  const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props} />
+    <KubeObjectMenu {...props} >
+      <MenuItem onClick={() => {
+        ConfigNetworkAttachmentDefinitionDialog.open(object)
+      }}>
+        <Icon material="play_circle_filled" title={`Config`} interactive={toolbar} />
+        <span className="title">Config</span>
+      </MenuItem>
+    </KubeObjectMenu>
   )
 }
 

@@ -25,6 +25,7 @@ export class IPInput extends React.Component<IPInputProps> {
 
   @computed get value(): string {
     try {
+      // check cidr
       const cidr = ipaddr.parseCIDR(this.props.value);
       if (this.props.isIPv4CIDR && !ipaddr.IPv4.isIPv4(this.props.value) && cidr.length == 2) {
         this.IP = cidr[0];
@@ -32,11 +33,37 @@ export class IPInput extends React.Component<IPInputProps> {
       }
       return this.props.value;
     } catch (err) {
-      let addr = new ipaddr.IPv4(this.IP)
+      // check ip
+      let addr = new ipaddr.IPv4(this.IP);
       if (this.props.isIPv4CIDR) {
         return addr.toString() + '/' + this.Mask;
       }
       return addr.toString();
+    }
+  }
+
+  componentDidMount() {
+    try{
+      this.IP = ipaddr.IPv4.parse(this.props.value).octets;
+    }
+    catch {
+      try {
+        const cidr = ipaddr.parseCIDR(this.props.value);
+        if (this.props.isIPv4CIDR && !ipaddr.IPv4.isIPv4(this.props.value) && cidr.length == 2) {
+          this.IP = cidr[0].octets;
+          this.Mask = cidr[1];
+        }
+      }catch {
+        this.IP = [0, 0, 0, 0];
+      }
+    }
+
+    this.validator();
+    for (let item of this.IPRefs.values()) {
+      item.setDirty(!this.valid);
+    }
+    if (this.MaskRef) {
+      this.MaskRef.setDirty(!this.valid)
     }
   }
 
@@ -47,16 +74,6 @@ export class IPInput extends React.Component<IPInputProps> {
       return this.valid;
     }
   };
-
-  componentDidMount() {
-    this.validator();
-    for (let item of this.IPRefs.values()) {
-      item.setDirty(!this.valid);
-    }
-    if (this.MaskRef) {
-      this.MaskRef.setDirty(!this.valid)
-    }
-  }
 
   validator() {
     try {

@@ -1,4 +1,4 @@
-import "./add-network-attachment-definition-dialog.scss";
+import "./config-network-attachment-definition-dialog.scss";
 
 import React from "react";
 import {Dialog, DialogProps} from "../dialog";
@@ -7,16 +7,15 @@ import {observable} from "mobx";
 import {observer} from "mobx-react";
 import {Notifications} from "../notifications";
 import {
-  networkAttachmentDefinitionApi,
   NetworkAttachmentDefinitionConfig,
   networkAttachmentDefinitionConfig,
-  IPAM,
-  ipam
+  NetworkAttachmentDefinition,
 } from "../../api/endpoints";
 import {IPInput} from "../ip";
 import {SubTitle} from "../layout/sub-title";
 import {Select} from "../select";
 import {Input} from "../input";
+import {networkAttachmentDefinitionStore} from "./network-attachment-definition.store";
 
 interface Props extends DialogProps {
 }
@@ -25,34 +24,47 @@ interface Props extends DialogProps {
 export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable name: string = "";
+  @observable static data: NetworkAttachmentDefinition = null;
   @observable config: NetworkAttachmentDefinitionConfig = networkAttachmentDefinitionConfig;
-  @observable ipam: IPAM = ipam;
-  @observable routes: { [key: string]: string }[] = [{"dst": "0.0.0.0/0"}];
 
-  static open() {
+  static open(data: NetworkAttachmentDefinition) {
+    ConfigNetworkAttachmentDefinitionDialog.data = data;
     ConfigNetworkAttachmentDefinitionDialog.isOpen = true;
+  }
+
+  get object() {
+    return ConfigNetworkAttachmentDefinitionDialog.data;
   }
 
   static close() {
     ConfigNetworkAttachmentDefinitionDialog.isOpen = false;
   }
 
+  onOpen = () => {
+    this.config = this.object.getConfig();
+  }
+
+  reset() {
+    this.config = networkAttachmentDefinitionConfig;
+    ConfigNetworkAttachmentDefinitionDialog.data = null;
+  }
+
   close = () => {
     ConfigNetworkAttachmentDefinitionDialog.close();
+    this.reset();
   }
 
   configNetworkAttachmentDefinition = async () => {
     try {
-
-      this.ipam.routes = this.routes;
-      this.config.ipam = this.ipam;
-      this.config.name = this.name;
-
+      await networkAttachmentDefinitionStore.update(this.object, {
+        spec: {
+          config: JSON.stringify(this.config)
+        }
+      })
       Notifications.ok(
         <>NetworkAttachmentDefinition {name} save succeeded</>
       );
-      // this.close();
+      this.close();
     } catch (err) {
       Notifications.error(err);
     }
@@ -61,43 +73,72 @@ export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Pro
 
   render() {
     const {...dialogProps} = this.props;
-    const header = <h5>Create NetworkAttachmentDefinition</h5>;
+    const header = <h5>Config NetworkAttachmentDefinition</h5>;
+
     return (
-      <Dialog {...dialogProps} className="ConfigNetworkAttachmentDefinitionDialog"
-              isOpen={ConfigNetworkAttachmentDefinitionDialog.isOpen} close={this.close}>
+      <Dialog {...dialogProps}
+              className="ConfigNetworkAttachmentDefinitionDialog"
+              isOpen={ConfigNetworkAttachmentDefinitionDialog.isOpen}
+              close={this.close}
+              onOpen={this.onOpen}>
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column"
-                      nextLabel={`Create NetworkAttachmentDefinition`} next={this.configNetworkAttachmentDefinition}>
-            <SubTitle title={`name`}/>
-            <Input
-              required value={this.name}
-              onChange={(value) => this.name = value}
-            />
+                      nextLabel={`Config NetworkAttachmentDefinition`} next={this.configNetworkAttachmentDefinition}>
             <SubTitle title={`type`}/>
             <Select
-              required value={this.config.type} options={['macvlan']}
-              onChange={(value) => this.config.type = value.value}
+              required
+              value={this.config.type || 'macvlan'}
+              options={['macvlan']}
+              onChange={(value) =>
+                this.config.type = value.value
+              }
             />
             <SubTitle title={`master`}/>
             <Input
-              required value={this.config.master}
-              onChange={(value) => this.config.master = value}
+              required
+              value={this.config.master}
+              onChange={(value) =>
+                this.config.master = value
+              }
             />
             <SubTitle title={`mode`}/>
             <Select
-              required value={this.config.mode} options={['bridge']}
-              onChange={(value) => this.config.mode = value.value}
+              required
+              value={this.config.mode}
+              options={['bridge']}
+              onChange={(value) =>
+                this.config.mode = value.value
+              }
             />
             <SubTitle title={`IPAM type`}/>
             <Select
-              required value={this.ipam.type} options={['host-local']}
-              onChange={(value) => this.ipam.type = value.value}
+              required
+              value={this.config.ipam?.type}
+              options={['host-local']}
+              onChange={(value) =>
+                this.config.ipam.type = value.value
+              }
             />
             <SubTitle title={`IPAM RangeStart`}/>
             <IPInput
-              value={this.ipam.rangeStart}
-              onChange={(value: string) => { this.ipam.rangeStart = value }}/>
+              value={this.config.ipam?.rangeStart}
+              onChange={(value: string) => {
+                console.log(value)
+                this.config.ipam.rangeStart = value
+              }}/>
             <SubTitle title={`IPAM RangeEnd`}/>
+            <IPInput
+              value={this.config.ipam?.rangeEnd}
+              onChange={(value: string) => {
+                this.config.ipam.rangeEnd = value
+              }}/>
+            <SubTitle title={`IPAM SubNet`}/>
+            <IPInput
+              value={this.config.ipam?.subnet}
+              isIPv4CIDR
+              onChange={(value: string) => {
+                this.config.ipam.subnet = value
+              }}/>
           </WizardStep>
         </Wizard>
       </Dialog>
