@@ -3,7 +3,7 @@ import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
 
 export interface IPAM {
-  type: string,
+  type?: string,
   gateway?: string,
   subnet?: string,
   rangeStart?: string,
@@ -13,21 +13,23 @@ export interface IPAM {
   }[]
 }
 
+export interface Plugin {
+  type?: string,
+  master?: string,
+  mode?: string,
+  ipam?:  IPAM
+}
+
 export interface NetworkAttachmentDefinitionConfig {
   cniVersion: string,
-  type: string,
   name: string,
-  master: string,
-  mode: string,
-  ipam?: IPAM
+  plugins: Plugin[],
 }
 
 export const networkAttachmentDefinitionConfig: NetworkAttachmentDefinitionConfig = {
   cniVersion: "0.3.0",
-  type: "macvlan",
   name: "",
-  master: "",
-  mode: "bridge"
+  plugins: []
 }
 
 export const ipam: IPAM = {
