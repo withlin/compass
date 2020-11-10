@@ -19,6 +19,7 @@ import {stopPropagation} from "../../utils";
 import {createMuiTheme, Grid, Paper} from "@material-ui/core";
 import {ThemeProvider} from "@material-ui/core/styles";
 import {Select} from "../select";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
 
 const theme = createMuiTheme({
   overrides: {
@@ -43,6 +44,7 @@ export class AddNetworkAttachmentDefinitionDialog extends React.Component<Props>
 
   @observable static isOpen = false;
   @observable name: string = "";
+  @observable namespace: string = "";
   @observable config: NetworkAttachmentDefinitionConfig = networkAttachmentDefinitionConfig;
   @observable routes: { [key: string]: string }[] = [{"dst": "0.0.0.0/0"}];
 
@@ -138,7 +140,7 @@ export class AddNetworkAttachmentDefinitionDialog extends React.Component<Props>
   addNetworkAttachmentDefinition = async () => {
     try {
       this.config.name = this.name;
-      await networkAttachmentDefinitionApi.create({name: this.name, namespace: "kube-system"}, {
+      await networkAttachmentDefinitionApi.create({name: this.name, namespace: this.namespace}, {
         spec: {
           config: JSON.stringify(this.config)
         }
@@ -168,6 +170,8 @@ export class AddNetworkAttachmentDefinitionDialog extends React.Component<Props>
                 value={this.name}
                 onChange={(value) => this.name = value}
               />
+              <SubTitle title={`namespace`} />
+              <NamespaceSelect required value={this.namespace} onChange={value => this.namespace = value.value}/>
               <SubTitle
                 title={
                   <>

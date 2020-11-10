@@ -44,6 +44,8 @@ export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Pro
 
   @observable static isOpen = false;
   @observable static data: NetworkAttachmentDefinition = null;
+  @observable name: string = "";
+  @observable namespace: string = "";
   @observable config: NetworkAttachmentDefinitionConfig = networkAttachmentDefinitionConfig;
 
   static open(data: NetworkAttachmentDefinition) {
@@ -61,9 +63,13 @@ export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Pro
 
   onOpen = () => {
     this.config = this.object.getConfig();
+    this.name = this.object.getName();
+    this.namespace = this.object.getNs();
   }
 
   reset() {
+    this.name = "";
+    this.namespace = "";
     this.config = networkAttachmentDefinitionConfig;
     ConfigNetworkAttachmentDefinitionDialog.data = null;
   }
@@ -174,6 +180,8 @@ export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Pro
           <Wizard header={header} done={this.close}>
             <WizardStep contentClass="flex gaps column"
                         nextLabel={`Config NetworkAttachmentDefinition`} next={this.configNetworkAttachmentDefinition}>
+              <SubTitle title={`name :`} children={this.name} />
+              <SubTitle title={`namespace :`} children={this.namespace} />
               <SubTitle
                 title={
                   <>
