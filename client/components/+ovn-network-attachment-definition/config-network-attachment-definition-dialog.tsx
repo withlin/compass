@@ -160,7 +160,6 @@ export class ConfigNetworkAttachmentDefinitionDialog extends React.Component<Pro
     }
   }
 
-
   render() {
     const {...dialogProps} = this.props;
     const header = <h5>Config NetworkAttachmentDefinition</h5>;
