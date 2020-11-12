@@ -9,15 +9,27 @@ export interface IPAM {
   rangeStart?: string,
   rangeEnd?: string,
   routes?: {
-    [key: string]: string
+    dst?: string
   }[]
+}
+
+export interface Delroute {
+  dst: string
+}
+
+export interface Addroute {
+  dst?: string
+  gw?: string
 }
 
 export interface Plugin {
   type?: string,
   master?: string,
   mode?: string,
-  ipam?:  IPAM
+  ipam?:  IPAM,
+  flushroutes?: boolean,
+  delroutes?: Delroute[],
+  addroutes?: Addroute[]
 }
 
 export interface NetworkAttachmentDefinitionConfig {
