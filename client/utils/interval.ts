@@ -13,7 +13,6 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
       isRunning = true;
       timer = window.setInterval(tick, 1000 * timeSec);
       if (runImmediately) tick();
-      console.log('test');
     },
     stop: function () {
       count = 0;
