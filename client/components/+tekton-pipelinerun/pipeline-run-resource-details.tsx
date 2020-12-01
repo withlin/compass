@@ -56,7 +56,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   @computed get pipelineResourceOptions() {
     return [
       ...pipelineResourceStore
-        .getAllByNs(configStore.getOpsNamespace())
+        .getAllByNs(this.namespace || configStore.getOpsNamespace())
         .map((item) => (item.getName()))
     ];
   }

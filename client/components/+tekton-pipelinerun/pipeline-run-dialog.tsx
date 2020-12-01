@@ -233,7 +233,7 @@ export class PipelineRunDialog extends React.Component<Props> {
             <PipelineRunResourceDetails
               disable={true}
               value={this.value?.resources}
-              // namespace={this.value?.namespace}
+              namespace={this.value?.namespace}
               onChange={(value) => { this.value.resources = value; }}
             />
             <br />
