@@ -87,7 +87,7 @@ export function BarChart(props: Props) {
           autoSkip: false,
           source: "data",
           backdropColor: "white",
-          fontColor: textColorPrimary,
+          fontColor: '#555555', // textColorPrimary
           fontSize: 11,
           maxRotation: 0,
           minRotation: 0
@@ -104,14 +104,14 @@ export function BarChart(props: Props) {
       yAxes: [{
         position: "right",
         gridLines: {
-          color: borderFaintColor,
+          color: '#dfdfdf', // borderFaintColor
           drawBorder: false,
           tickMarkLength: 0,
           zeroLineWidth: 0
         },
         ticks: {
           maxTicksLimit: 6,
-          fontColor: textColorPrimary,
+          fontColor: '#555555', // textColorPrimary,
           fontSize: 11,
           padding: 8,
           min: 0
@@ -145,7 +145,7 @@ export function BarChart(props: Props) {
     },
     plugins: {
       ZebraStripes: {
-        stripeColor: chartStripesColor
+        stripeColor: '#00000009' // chartStripesColor
       }
     }
   };
