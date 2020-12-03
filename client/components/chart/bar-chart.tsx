@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ChartJS from "chart.js";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, createRef } from "react";
 import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
@@ -36,8 +36,10 @@ export function BarChart(props: Props) {
   const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
 
   const savedName = useRef<string>();
-
+  const chatRef = createRef<Chart>();
+  
   useEffect(() => {
+    chatRef.current.updateChart()
     savedName.current = props.name;
   });
 
@@ -87,7 +89,7 @@ export function BarChart(props: Props) {
           autoSkip: false,
           source: "data",
           backdropColor: "white",
-          fontColor: '#555555', // textColorPrimary
+          fontColor: textColorPrimary,
           fontSize: 11,
           maxRotation: 0,
           minRotation: 0
@@ -104,14 +106,14 @@ export function BarChart(props: Props) {
       yAxes: [{
         position: "right",
         gridLines: {
-          color: '#dfdfdf', // borderFaintColor
+          color: borderFaintColor,
           drawBorder: false,
           tickMarkLength: 0,
           zeroLineWidth: 0
         },
         ticks: {
           maxTicksLimit: 6,
-          fontColor: '#555555', // textColorPrimary,
+          fontColor: textColorPrimary,
           fontSize: 11,
           padding: 8,
           min: 0
@@ -145,7 +147,7 @@ export function BarChart(props: Props) {
     },
     plugins: {
       ZebraStripes: {
-        stripeColor: '#00000009' // chartStripesColor
+        stripeColor: chartStripesColor
       }
     }
   };
@@ -155,6 +157,7 @@ export function BarChart(props: Props) {
   }
   return (
     <Chart
+      ref={chatRef}
       className={cssNames("BarChart flex box grow column", className)}
       type={ChartKind.BAR}
       data={chartData}

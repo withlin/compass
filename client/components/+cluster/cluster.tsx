@@ -14,6 +14,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
+import { themeStore } from "../../theme.store";
 
 @observer
 export class Cluster extends React.Component {
@@ -43,6 +44,10 @@ export class Cluster extends React.Component {
     ])
   }
 
+  @computed get activeTheme() {
+    return themeStore.activeTheme
+  }
+
   @computed get isLoaded() {
     const userConfig = JSON.parse(localStorage.getItem('u_config'))
     if (!userConfig) return false
@@ -62,7 +67,7 @@ export class Cluster extends React.Component {
           {!isLoaded && <Spinner center />}
           {isLoaded && (
             <>  
-              <ClusterMetrics />
+              <ClusterMetrics themeType={this.activeTheme.name} />
               <ClusterPieCharts />
               <ClusterIssues className={cssNames({ wide: isElectron })} />
             </>
