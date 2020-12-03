@@ -12,7 +12,11 @@ import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
-export const ClusterMetrics = observer(() => {
+export interface themeTypeConfig {
+  themeType: string
+}
+
+export const ClusterMetrics = observer(({ themeType: string }: themeTypeConfig ) => {
 
   const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics, liveMetrics } = clusterStore;
   let { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterStore.metrics);
