@@ -35,12 +35,10 @@ export function BarChart(props: Props) {
   const { name, data, className, timeLabelStep, plugins, options: customOptions, ...settings } = props;
   const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
 
-  const savedName = useRef<string>();
   const chatRef = createRef<Chart>();
   
   useEffect(() => {
-    chatRef.current.updateChart()
-    savedName.current = props.name;
+    chatRef.current && chatRef.current.updateChart();
   });
 
   const getBarColor = (ctx: IChartContext) => {
