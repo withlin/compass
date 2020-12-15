@@ -208,3 +208,38 @@ input:-webkit-autofill {
     line-height: 0.7 !important ;
   }
 }
+
+.MainLayout {
+  > header {
+    box-shadow: 1px -4px 7px #000;
+  }
+  > aside {
+    box-shadow: 2px 0 5px 0 rgba(0,0,0,.1);
+  }
+}
+
+.Input {
+  label {
+    padding: 8px !important;
+    border-bottom: 0 !important;
+    background: #ececec !important;
+  }
+}
+.Input.SearchInput {
+  label {
+    background: none !important;
+  }
+}
+.MuiTooltip-popper {
+  .MuiTooltip-tooltip {
+    line-height: 18px;
+  }
+}
+
+// .MuiSwitch-colorPrimary.Mui-checked {
+//   color: #1976d2;
+//   &+.MuiSwitch-track {
+//     background-color: #1976d2;
+//   }
+// }
+ 

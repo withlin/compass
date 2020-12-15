@@ -14,6 +14,7 @@ import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
+import { Grid } from "@material-ui/core";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
@@ -295,9 +296,9 @@ export class ConfigSecretDialog extends React.Component<Props> {
       <>
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
           <Icon
-            small
             tooltip={_i18n._(t`Add Field`)}
-            material="edit"
+            material="add_circle"
+            className="add_circle"
             onClick={() => this.addField(field)}
           />
         </SubTitle>
@@ -305,34 +306,43 @@ export class ConfigSecretDialog extends React.Component<Props> {
           {fields.map((item, index) => {
             const { key = "", value = "", required } = item;
             return (
-              <>
-                <div key={index} className="secret-field flex gaps auto align-center">
-                  <Input
-                    className="key"
-                    placeholder={_i18n._(t`Name`)}
-                    title={key}
-                    tabIndex={required ? -1 : 0}
-                    readOnly={required}
-                    value={key} onChange={v => item.key = v}
-                  />
-                  <Input
-                    multiLine maxRows={5}
-                    required={required}
-                    className="value"
-                    placeholder={_i18n._(t`Value`)}
-                    value={value} onChange={v => item.value = v}
-                  />
-                  <Icon
-                    small
-                    // disabled={required}
-                    tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
-                    className="remove-icon"
-                    material="clear"
-                    onClick={() => this.removeField(field, index)}
-                  />
-                </div>
-                <br />
-              </>
+              <div key={index}>
+                <Grid container spacing={2} alignItems="center" direction="row">
+                  <Grid item xs={11} direction={"row"} zeroMinWidth>
+                    <Grid container spacing={2} direction={"row"} zeroMinWidth>
+                      <Grid item xs zeroMinWidth>
+                        <Input
+                          className="key"
+                          placeholder={_i18n._(t`Name`)}
+                          title={key}
+                          tabIndex={required ? -1 : 0}
+                          readOnly={required}
+                          value={key} onChange={v => item.key = v}
+                        />
+                      </Grid>
+                      <Grid item xs zeroMinWidth>
+                        <Input
+                          multiLine maxRows={5}
+                          required={required}
+                          className="value"
+                          placeholder={_i18n._(t`Value`)}
+                          value={value} onChange={v => item.value = v}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs zeroMinWidth>
+                    <Icon
+                      small
+                      tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
+                      className="remove-icon"
+                      material="clear"
+                      ripple="secondary"
+                      onClick={() => this.removeField(field, index)}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
             )
           })}
         </div>
@@ -386,7 +396,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
         {fields.map((item, index) => {
           const { key = "", value = "", required } = item;
           return (
-            <div key={index} className="secret-field flex gaps auto align-center">
+            <div key={index} style={{ marginTop: 8 }} className="secret-field flex gaps auto align-center">
               <Input
                 disabled={true}
                 className="key"

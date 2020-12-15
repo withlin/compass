@@ -59,7 +59,7 @@ export class PipelineResourceParamsDetails extends React.Component<Props> {
     rParams(index: number, disable: boolean) {
         return (
             <>
-                <Grid container spacing={5} alignItems="center" direction="row">
+                <Grid container spacing={2} alignItems="center" direction="row">
                     <Grid item xs={11} direction={"row"} zeroMinWidth>
                         <Grid container spacing={1} direction={"row"} zeroMinWidth>
                             <Grid item xs zeroMinWidth>
@@ -92,6 +92,7 @@ export class PipelineResourceParamsDetails extends React.Component<Props> {
                                 tooltip={<Trans>Remove</Trans>}
                                 className="remove-icon"
                                 material="clear"
+                                ripple="secondary"
                                 onClick={(e) => {
                                     this.remove(index);
                                 }}
@@ -114,11 +115,11 @@ export class PipelineResourceParamsDetails extends React.Component<Props> {
                             <Trans>Params</Trans>
                             {!disable ?
                                 <>
-                                    &nbsp;&nbsp;
-                  <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                                        stopPropagation(event);
-                                        this.add()
-                                    }} small />
+                                  &nbsp;&nbsp;
+                                  <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
+                                    stopPropagation(event);
+                                    this.add()
+                                  }} />
                                 </> : null}
                         </>
                     }>

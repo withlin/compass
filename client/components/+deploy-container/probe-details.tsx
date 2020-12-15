@@ -166,8 +166,8 @@ export class ProbeDetails extends React.Component<Props> {
         <FormControlLabel
           control={
             <Switch
-              checked={this.value.status}
               color="default"
+              checked={this.value.status}
               onChange={() => {
                 this.value.status = !this.value.status
               }}

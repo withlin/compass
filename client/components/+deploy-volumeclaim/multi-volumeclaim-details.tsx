@@ -41,7 +41,7 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid container spacing={2} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
               <SubTitle title={<Trans>Name</Trans>}/>
               <Input
@@ -62,11 +62,11 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
             </Grid>
             <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
               <Icon
-                style={{margin: "0.8vw, 0.9vh"}}
                 small
-                tooltip={_i18n._(t`Remove Environment`)}
+                tooltip={_i18n._(t`Remove VolumeClaim`)}
                 className="remove-icon"
                 material="clear"
+                ripple="secondary"
                 onClick={(e) => {
                   this.remove(index);
                   e.stopPropagation();
@@ -88,10 +88,10 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
             <>
               <Trans>VolumeClaim</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>

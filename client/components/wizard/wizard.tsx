@@ -6,6 +6,7 @@ import { Button } from "../button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
+import {Icon} from "../icon";
 
 interface WizardCommonProps<D = any> {
   data?: Partial<D>;
@@ -88,6 +89,14 @@ export class Wizard extends React.Component<WizardProps, State> {
           {header}
           {title ? <SubTitle title={title}/> : null}
           {!hideSteps && steps.length > 1 ? <Stepper steps={steps} step={this.step}/> : null}
+          <Icon
+            small
+            className="remove-icon"
+            material="clear"
+            onClick={(event) => {
+              this.props.done()
+            }}
+          />
         </div>
         {step}
       </div>

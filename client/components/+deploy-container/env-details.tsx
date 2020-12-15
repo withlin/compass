@@ -177,8 +177,8 @@ export class EnvironmentDetails extends React.Component<Props> {
   rNormal(index: number) {
     return (
       <>
-        <Grid container spacing={5} direction={"row"} zeroMinWidth>
-          <Grid item xs={11} direction={"row"} zeroMinWidth>
+        <Grid container spacing={2} alignItems={"center"} direction={"row"} zeroMinWidth>
+          <Grid item xs={12} direction={"row"} zeroMinWidth>
             <Grid container spacing={5} direction={"row"} zeroMinWidth>
               <Grid item xs zeroMinWidth>
                 <Input
@@ -204,18 +204,19 @@ export class EnvironmentDetails extends React.Component<Props> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs zeroMinWidth>
+          {/* <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove`)}
               className="remove-icon"
               material="clear"
+              ripple="secondary"
               onClick={(event) => {
                 this.remove(index);
                 stopPropagation(event)
               }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </>
     )
@@ -230,10 +231,10 @@ export class EnvironmentDetails extends React.Component<Props> {
             <>
               <Trans>Environment</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>
@@ -244,7 +245,7 @@ export class EnvironmentDetails extends React.Component<Props> {
               <>
                 <br/>
                 <Paper elevation={3} style={{padding: 25}}>
-                  <Grid container spacing={5} alignItems="center" direction="row">
+                  <Grid container spacing={2} alignItems="center" direction="row" zeroMinWidth>
                     <Grid item xs={11} zeroMinWidth>
                       <div key={index}>
                         <SubTitle title={<Trans>Environment Type</Trans>}/>
@@ -262,15 +263,14 @@ export class EnvironmentDetails extends React.Component<Props> {
                         {this.value[index].type == "Other" ? this.rOther(index) : null}
                         {this.value[index].type == "Normal" ? this.rNormal(index) : null}
                       </div>
-                      <br/>
                     </Grid>
                     <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
                       <Icon
-                        style={{margin: "0.8vw, 0.9vh"}}
                         small
                         tooltip={_i18n._(t`Remove Environment`)}
                         className="remove-icon"
                         material="clear"
+                        ripple="secondary"
                         onClick={(e) => {
                           this.remove(index);
                           e.stopPropagation();

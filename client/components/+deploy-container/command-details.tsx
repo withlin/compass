@@ -37,7 +37,7 @@ export class CommandDetails extends React.Component<Props> {
   rCommand(index: number) {
     return (
       <>
-        <Grid container spacing={5} alignItems="center" direction="row">
+        <Grid container spacing={2} alignItems="center" direction="row">
           <Grid item xs={11} zeroMinWidth>
             <Input
               className="item"
@@ -51,6 +51,7 @@ export class CommandDetails extends React.Component<Props> {
           <Grid item xs zeroMinWidth>
             <Icon
               small
+              ripple="secondary"
               tooltip={_i18n._(t`Remove`)}
               className="remove-icon"
               material="clear"
@@ -61,7 +62,6 @@ export class CommandDetails extends React.Component<Props> {
             />
           </Grid>
         </Grid>
-        <br/>
       </>
     )
   }
@@ -75,10 +75,14 @@ export class CommandDetails extends React.Component<Props> {
             <>
               <Trans>Command</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                stopPropagation(event);
-                this.add()
-              }} small/>
+              <Icon
+                material="add_circle"
+                className="add_circle"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>

@@ -48,9 +48,9 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   rWorkSpace(index: number) {
     return (
       <>
-        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+        <Grid container spacing={2} alignItems="center" direction={"row"} zeroMinWidth>
           <Grid item xs={11} direction={"row"} zeroMinWidth>
-            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+            <Grid container spacing={2} direction={"row"} zeroMinWidth>
               <Grid item xs zeroMinWidth>
                 <Input
                   placeholder={"Name"}
@@ -75,6 +75,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
               tooltip={_i18n._(t`Remove`)}
               className="remove-icon"
               material="clear"
+              ripple="secondary"
               onClick={(event) => {
                 this.remove(index);
                 stopPropagation(event)
@@ -88,23 +89,28 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
 
   render() {
     return (
-      <>
+      <div className="workSpaces">
         <SubTitle
           title={
             <>
               <Trans>WorkSpaces</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                stopPropagation(event);
-                this.add()
-              }} small/>
+              <Icon
+                material="add_circle"
+                className="add_circle"
+                ripple="primary"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>
         {this.value.map((item: any, index: number) => {
           return this.rWorkSpace(index);
         })}
-      </>
+      </div>
     );
   }
 

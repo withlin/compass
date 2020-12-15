@@ -76,7 +76,7 @@ export class StackDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid container spacing={2} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
               <SubTitle title={<Trans>Address</Trans>}/>
               <Input
@@ -141,6 +141,7 @@ export class StackDetails extends React.Component<Props> {
                 tooltip={_i18n._(t`Remove Environment`)}
                 className="remove-icon"
                 material="clear"
+                ripple="secondary"
                 onClick={(e) => {
                   this.remove(index);
                   e.stopPropagation();
@@ -163,10 +164,10 @@ export class StackDetails extends React.Component<Props> {
             <>
               {_i18n._(name)}
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>

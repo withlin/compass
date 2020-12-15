@@ -11,7 +11,7 @@ html {
   --select-option-selected-color: #{$selectOptionHoveredColor};
   --select-option-focused-bgc: #{$colorInfo};
   --select-option-focused-color: #{$textColorAccent};
-
+  
   .Select {
     position: relative;
     min-width: 14vw;
@@ -20,18 +20,31 @@ html {
       color: inherit;
     }
 
+    &::placeholder {
+      color: #a5a5a5;
+      opacity: .75;
+    }
+
     &--is-disabled {
       opacity: .75;
       cursor: not-allowed;
       pointer-events: auto;
     }
-
+    &.NamespaceSelect {
+      .Select__control {
+        background: transparent;
+        box-shadow: 0 0 0 1px $halfGray;
+        padding: 0;
+      }
+    }
     &__control {
+      padding: 2px;
+      background: #ececec;
+      box-shadow: none;
+      color: var(--textColorPrimary);
       border: none;
       border-radius: $radius;
-      background: transparent;
       min-height: 0;
-      box-shadow: 0 0 0 1px $halfGray;
 
       &--is-focused {
         box-shadow: 0 0 0 2px $primary;
@@ -65,7 +78,7 @@ html {
 
     &__menu {
       background: var(--select-menu-bgc);
-      box-shadow: inset 0 0 0 1px var(--select-menu-border-color);
+      // box-shadow: inset 0 0 0 1px var(--select-menu-border-color);
 
       &-list {
         @include custom-scrollbar;

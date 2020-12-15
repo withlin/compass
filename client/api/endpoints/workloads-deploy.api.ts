@@ -32,6 +32,10 @@ export class Deploy extends WorkloadKubeObject {
     return get(this, "spec.resourceType");
   }
 
+  getTagName() {
+    return get(this, "metadata.labels.tagName") || '';
+  }
+
   getGenerateTimestamp() {
     if (this.metadata && this.metadata.creationTimestamp) {
       return this.metadata.creationTimestamp;

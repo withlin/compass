@@ -46,14 +46,17 @@ export class PipelineWorkspaces extends React.Component<Props> {
             <>
               <Trans>WorkSpaces</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                stopPropagation(event);
-                this.add()
-              }} small/>
+              <Icon
+                material={"add_circle"}
+                className="add_circle"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>
-
         {this.value.map((item: any, index: number) => {
           return (
             <>

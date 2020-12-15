@@ -66,7 +66,7 @@ export class DeployServiceDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid container spacing={2} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
               <Grid>
                 <SubTitle title={<Trans>Name</Trans>}/>
@@ -118,9 +118,9 @@ export class DeployServiceDetails extends React.Component<Props> {
               <Icon
                 small
                 tooltip={_i18n._(t`Remove Ports`)}
-                style={{margin: "0.8vw, 0.9vh"}}
                 className="remove-icon"
                 material="clear"
+                ripple="secondary"
                 onClick={(e) => {
                   this.remove(index);
                   e.stopPropagation()
@@ -150,10 +150,10 @@ export class DeployServiceDetails extends React.Component<Props> {
             <>
               <Trans>Ports</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>

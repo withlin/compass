@@ -7,6 +7,8 @@ import { LocationDescriptor } from 'history';
 import { autobind, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber"
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   material?: string;          // material-icon, see available names at https://material.io/icons/
@@ -21,6 +23,7 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
   focusable?: boolean;        // allow focus to the icon + show .active styles (default: "true", when icon is interactive)
   sticker?: boolean;
   disabled?: boolean;
+  ripple?: 'default' | 'inherit' | 'primary' | 'secondary';
 }
 
 @withTooltip
@@ -61,10 +64,15 @@ export class Icon extends React.PureComponent<IconProps> {
 
   render() {
     const { isInteractive } = this;
+    const StyledIconButton = withStyles({
+      root: {
+        padding: '0 !important',
+      }
+    })(IconButton);
     const {
       // skip passing props to icon's html element
       className, href, link, material, svg, size, small, big,
-      disabled, sticker, active, focusable, children,
+      disabled, sticker, active, focusable, children, ripple,
       interactive: _interactive,
       onClick: _onClick,
       onKeyDown: _onKeyDown,
@@ -102,13 +110,20 @@ export class Icon extends React.PureComponent<IconProps> {
         {children}
       </>
     );
-
+      
     // render icon type
     if (link) {
       return <NavLink {...iconProps} to={link}/>
     }
     if (href) {
       return <a {...iconProps} href={href}/>
+    }
+    if (ripple) {
+      return (
+        <StyledIconButton color={ripple}>
+          <i {...iconProps} />
+        </StyledIconButton>
+      )
     }
     return <i {...iconProps} />
   }

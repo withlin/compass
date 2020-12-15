@@ -43,10 +43,10 @@ export class AllowSubnets extends React.Component<Props> {
             <>
               <Trans>AllowSubnets</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>
@@ -54,7 +54,7 @@ export class AllowSubnets extends React.Component<Props> {
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Grid container spacing={5} alignItems="center" direction="row">
+                <Grid container spacing={2} alignItems="center" direction="row">
                   <Grid item xs={11} zeroMinWidth>
                     <Input
                       className="item"
@@ -73,6 +73,7 @@ export class AllowSubnets extends React.Component<Props> {
                       tooltip={<Trans>Remove Subnet</Trans>}
                       className="remove-icon"
                       material="clear"
+                      ripple="secondary"
                       onClick={(e) => {
                         this.remove(index);
                         e.stopPropagation()

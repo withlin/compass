@@ -33,6 +33,10 @@
     height: var(--big-size);
   }
 
+  &.add_circle {
+    color: #2196f3;
+  }
+
   > span {
     width: 100%;
     height: 100%;
@@ -99,7 +103,7 @@
   }
 
   &.active {
-    color: var(--color-active);
+    // color: var(--color-active);
     box-shadow: 0 0 0 3px $iconActiveBackground;
     background-color: $iconActiveBackground;
   }
@@ -108,11 +112,11 @@
     cursor: pointer;
     transition: 250ms color, 250ms opacity, 150ms background-color, 150ms box-shadow;
     border-radius: 50%;
-
-    &.focusable:focus {
-      @extend .active;
-    }
-
+    
+    // &.focusable:focus {
+    //   @extend .active;
+    // }
+    
     &:hover {
       @extend .active;
     }

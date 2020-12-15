@@ -8,6 +8,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<any>, TooltipDecorator
   waiting?: boolean;
   primary?: boolean;
   accent?: boolean;
+  dangerous?: boolean;
   plain?: boolean;
   hidden?: boolean;
   active?: boolean;
@@ -23,12 +24,12 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
   private button: HTMLButtonElement;
 
   render() {
-    const { className, waiting, label, primary, accent, plain, hidden, active, big, round, tooltip, children, ...props } = this.props;
+    const { className, waiting, label, primary, accent, dangerous, plain, hidden, active, big, round, tooltip, children, ...props } = this.props;
     const btnProps = props as Partial<ButtonProps>;
     if (hidden) return null;
 
     btnProps.className = cssNames('Button', className, {
-      waiting, primary, accent, plain, active, big, round,
+      waiting, primary, accent, plain, active, big, round, dangerous
     });
 
     const btnContent: ReactNode = (

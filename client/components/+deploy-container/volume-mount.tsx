@@ -38,7 +38,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
     return (
       <>
         <br/>
-        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+        <Grid container spacing={2} alignItems={"center"} direction={"row"} zeroMinWidth>
           <Grid item xs={11} direction={"row"} zeroMinWidth>
             <Grid container spacing={1} direction={"row"} zeroMinWidth>
               <Grid item xs zeroMinWidth>
@@ -67,6 +67,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
               tooltip={<Trans>Remove MountPath</Trans>}
               className="remove-icon"
               material="clear"
+              ripple="secondary"
               onClick={(event) => {
                 this.remove(index);
                 stopPropagation(event)
@@ -85,10 +86,10 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
           <>
             <Trans>VolumeMounts</Trans>
             &nbsp;&nbsp;
-            <Icon material={"edit"} className={"editIcon"} onClick={event => {
+            <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
               this.add();
               stopPropagation(event)
-            }} small/>
+            }} />
           </>
         }/>
         {this.value.items.map((item: any, index: number) => {
