@@ -6,6 +6,14 @@ import Divider from '@material-ui/core/Divider';
 
 const theme = createMuiTheme({
   overrides: {
+    MuiAccordionSummary: {
+      root: {
+        'min-height': '44px !important'
+      },
+      content: {
+        margin: '12px 0 !important'
+      }
+    },
     MuiAccordionDetails: {
       root: {
         display: "gird",

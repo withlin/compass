@@ -10,7 +10,7 @@ import { t, Trans } from "@lingui/macro";
 import { Deploy, deployApi, Pipeline } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
-import { DeployDialog, AddDeployDialog } from "../+workloads-deploy";
+import { DeployDialog, AddDeployDialog, TaggingDialog } from "../+workloads-deploy";
 import { IDeployWorkloadsParams } from "../+workloads"
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
@@ -50,6 +50,7 @@ export class Deploys extends React.Component<Props> {
       <>
         <KubeObjectListLayout
           isClusterScoped
+          isShowTag
           className="Deploy" store={deployStore}
           sortingCallbacks={{
             [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),
@@ -60,10 +61,12 @@ export class Deploys extends React.Component<Props> {
             [sortBy.age]: (deploy: Deploy) => deploy.getAge(false),
           }
           }
-          searchFilters={
-            [
-              (deploy: Deploy) => deploy.getSearchFields(),
-            ]}
+          searchFilters={[
+            (deploy: Deploy) => deploy.getSearchFields(),
+          ]}
+          searchRegexpFilters={[
+            { prefix: '^tagName:', cb: (deploy: Deploy) => deploy.getTagName()}, //Regexp match
+          ]}
           renderHeaderTitle={< Trans> Deploys </Trans>}
           renderTableHeader={
             [
@@ -95,6 +98,7 @@ export class Deploys extends React.Component<Props> {
             onAdd: () => AddDeployDialog.open()
           }}
         />
+        <TaggingDialog />
         <DeployDialog />
         <AddDeployDialog />
         <ConfigDeployDialog />
@@ -108,6 +112,12 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
   return (
     <>
       <KubeObjectMenu {...props} >
+        <MenuItem onClick={() => {
+          TaggingDialog.open(object)
+        }}>
+          <Icon material="loyalty" title={_i18n._(t`Tagging`)} interactive={toolbar} />
+          <span className="title"><Trans>Tagging</Trans></span>
+        </MenuItem>
         <MenuItem onClick={() => {
           DeployDialog.open(object.getAppName(), object.getName())
         }}>

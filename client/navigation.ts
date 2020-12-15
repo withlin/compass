@@ -31,6 +31,7 @@ export interface IQueryParams {
   search?: string;       // search-input value
   sortBy?: string;       // sorting params for table-list
   orderBy?: string;
+  tagName?: string;
 }
 
 export function getQueryString(params?: Partial<IQueryParams>, merge = true) {
@@ -82,4 +83,14 @@ export function setSearch(text: string) {
 
 export function getSearch() {
   return navigation.searchParams.get("search") || "";
+}
+
+export function setTagName(text: string) {
+  navigation.replace({
+    search: getQueryString({ tagName: text })
+  })
+}
+
+export function getTagName() {
+  return navigation.searchParams.get("tagName")
 }

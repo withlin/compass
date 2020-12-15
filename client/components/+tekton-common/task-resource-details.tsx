@@ -71,7 +71,7 @@ export class TaskResourceDetails extends React.Component<Props> {
   rForm(index: number) {
     return (
       <>
-        <Grid container spacing={5} alignItems="center" direction="row">
+        <Grid container spacing={2} alignItems="center" direction="row">
           <Grid item xs={11} direction={"row"} zeroMinWidth>
             <Grid container spacing={5} direction={"row"} zeroMinWidth>
               <Grid item xs zeroMinWidth>
@@ -102,8 +102,9 @@ export class TaskResourceDetails extends React.Component<Props> {
           <Grid item xs zeroMinWidth>
             <Icon
               small
-              className="remove-icon"
+              // className="remove-icon"
               material="clear"
+              ripple="secondary"
               onClick={(event) => {
                 stopPropagation(event);
                 this.remove(index);
@@ -111,7 +112,6 @@ export class TaskResourceDetails extends React.Component<Props> {
             />
           </Grid>
         </Grid>
-        <br/>
       </>
     )
   }
@@ -126,10 +126,14 @@ export class TaskResourceDetails extends React.Component<Props> {
             <>
               {_i18n._(title)}
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                stopPropagation(event);
-                this.add()
-              }} small/>
+              <Icon
+                material="add_circle"
+                className="add_circle"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>

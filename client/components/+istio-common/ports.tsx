@@ -94,10 +94,10 @@ export class PortDetails extends React.Component<Props> {
                         <>
                             <Trans>Ports</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                                 stopPropagation(event);
                                 this.add()
-                            }} small />
+                            }} />
                         </>
                     }>
                 </SubTitle>

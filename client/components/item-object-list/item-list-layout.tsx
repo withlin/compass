@@ -9,6 +9,7 @@ import { ConfirmDialog, IConfirmDialogParams } from "../confirm-dialog";
 import { SortingCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
 import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
+import { Icon } from "../icon";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import { ItemObject, ItemStore } from "../../item.store";
@@ -17,19 +18,26 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
+import { PageFiltersTag } from "./page-filters-tag";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { themeStore } from "../../theme.store";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // todo: refactor, split to small re-usable components
 
 export type SearchFilter<T extends ItemObject = any> = (item: T) => string | number | (string | number)[];
 export type ItemsFilter<T extends ItemObject = any> = (items: T[]) => T[];
+export type searchRegexpFilter<T extends ItemObject = any> = {
+  prefix: string,
+  cb: (item: T) => string | number | (string | number)[]
+};
 
 interface IHeaderPlaceholders {
   title: ReactNode;
   search: ReactNode;
   filters: ReactNode;
   info: ReactNode;
+  filterTags: ReactNode;
 }
 
 export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
@@ -37,8 +45,10 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
   isClusterScoped?: boolean;
+  isShowTag?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
+  searchRegexpFilters?: searchRegexpFilter<T>[];
   filterItems?: ItemsFilter<T>[];
 
   // header (title, filtering, searching, etc.)
@@ -133,15 +143,31 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
     [FilterType.SEARCH]: items => {
-      const { searchFilters, isSearchable } = this.props;
+      const { searchFilters, searchRegexpFilters, isSearchable } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
       if (search && isSearchable && searchFilters) {
         const normalizeText = (text: string) => String(text).toLowerCase();
-        const searchTexts = [search].map(normalizeText);
+        const searchTexts = [search].map(normalizeText)[0];
+        const hasRegexp = searchRegexpFilters && searchRegexpFilters.some(regex => {
+          try {
+            new RegExp(searchTexts.substring(regex.prefix.length - 1));
+            return new RegExp(regex.prefix.toLowerCase()).test(searchTexts)
+          }  catch (err) {
+            console.log('Error RegExp', err)
+            return false
+          }
+        })
         return items.filter(item => {
+          if (searchRegexpFilters && hasRegexp) {
+            return searchRegexpFilters.some(getTexts => {
+              const sourceTexts: string[] = [getTexts.cb(item)].flat().map(normalizeText);
+              console.log('sourceTexts', sourceTexts);
+              return sourceTexts.some(source => new RegExp(searchTexts.substring(getTexts.prefix.length - 1)).test(source));
+            })
+          }
           return searchFilters.some(getTexts => {
             const sourceTexts: string[] = [getTexts(item)].flat().map(normalizeText);
-            return sourceTexts.some(source => searchTexts.some(search => source.includes(search)));
+            return sourceTexts.some(source => source.includes(searchTexts));
           })
         });
       }
@@ -155,6 +181,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
       return items;
     },
+
+    [FilterType.TAGNAME]: items => {
+      const { isShowTag } = this.props;
+      const tagValues = pageFilters.getValues(FilterType.TAGNAME)[0] || "";
+      if (tagValues && isShowTag) {
+        return items.filter(item => item.metadata?.labels?.tagName === tagValues)
+      }
+      return items;
+    },
   }
 
   @computed get isReady() {
@@ -164,12 +199,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
-    const { isClusterScoped, isSearchable, searchFilters } = this.props;
+    const { isClusterScoped, isSearchable, searchFilters, isShowTag } = this.props;
     if (isClusterScoped) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.NAMESPACE);
     }
     if (!(isSearchable && searchFilters)) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
+    }
+    if (!isShowTag) {
+      activeFilters = activeFilters.filter(({ type }) => type !== FilterType.TAGNAME);
     }
     return activeFilters;
   }
@@ -188,13 +226,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { allItems, filters, filterCallbacks } = this;
     const filterItems: ItemsFilter[] = [];
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
-
+    
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
       const filterCallback = filterCallbacks[type];
       if (filterCallback && filtersGroup.length > 0) {
         filterItems.push(filterCallback);
       }
     });
+    
     return this.applyFilters(filterItems, allItems);
   }
 
@@ -302,13 +341,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
-    const { title, filters, search, info } = placeholders;
+    const { title, filters, search, info, filterTags } = placeholders;
     return (
       <>
         {title}
         <div className="info-panel box grow">
           {this.isReady && info}
         </div>
+        {filterTags}
         {filters}
         {search}
       </>
@@ -338,19 +378,33 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderHeader() {
-    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
+    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped, isShowTag, searchRegexpFilters } = this.props;
     if (!showHeader) return;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
+    let searchTips = null;
+    if (searchRegexpFilters) {
+      let field = searchRegexpFilters.map(item => item.prefix.replace('^', '')).join(',');
+      searchTips = (
+        <Tooltip arrow title={`you can search ${field.replace(':', '')} by regexp expression, such as Input ${field} {regexp}`}>
+          <Icon
+            small
+            material="info"
+            style={{ marginLeft: -10, color: '#ff9900', cursor: 'pointer' }}
+          />
+        </Tooltip>
+      )
+    }
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
+      filterTags: <>{isShowTag && <PageFiltersTag />}</>,
       filters: <>
         {!isClusterScoped && <NamespaceSelectFilter/>}
         <PageFiltersSelect allowEmpty disableFilters={{
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }}/>
       </>,
-      search: <SearchInput/>,
+      search: <><SearchInput/>{searchTips}</>,
     }
     let header = this.renderHeaderContent(placeholders);
     if (customizeHeader) {

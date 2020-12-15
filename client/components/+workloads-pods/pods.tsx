@@ -72,8 +72,12 @@ export class Pods extends React.Component<Props> {
           [sortBy.status]: (pod: Pod) => pod.getStatusMessage(),
         }}
         searchFilters={[
+          (pod: Pod) => `status:${pod.getStatusMessage()}`,
           (pod: Pod) => pod.getSearchFields(),
           (pod: Pod) => pod.getStatusMessage(),
+        ]}
+        searchRegexpFilters={[
+          { prefix: '^status:', cb: (pod: Pod) => pod.getStatusMessage()}, //Regexp match
         ]}
         renderHeaderTitle={<Trans>Pods</Trans>}
         renderTableHeader={[

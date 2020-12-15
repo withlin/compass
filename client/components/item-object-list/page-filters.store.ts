@@ -1,11 +1,12 @@
 import { computed, observable, reaction } from "mobx";
 import { autobind } from "../../utils";
-import { getSearch, setSearch } from "../../navigation";
+import { getSearch, setSearch, setTagName, getTagName } from "../../navigation";
 import { namespaceStore } from "../+namespaces/namespace.store";
 
 export enum FilterType {
   SEARCH = "search",
   NAMESPACE = "namespace",
+  TAGNAME = "tagName",
 }
 
 export interface Filter {
@@ -25,6 +26,7 @@ export class PageFiltersStore {
   constructor() {
     this.syncWithGlobalSearch();
     this.syncWithContextNamespace();
+    this.syncWithGlobalTagName();
   }
 
   protected syncWithContextNamespace() {
@@ -60,6 +62,24 @@ export class PageFiltersStore {
         }
         if (search) {
           this.addFilter({ type: FilterType.SEARCH, value: search }, true);
+        }
+      }, {
+        fireImmediately: true
+      })
+    ];
+    return () => disposers.forEach(dispose => dispose());
+  }
+
+  protected syncWithGlobalTagName() {
+    const disposers = [
+      reaction(() => this.getValues(FilterType.TAGNAME)[0], setTagName),
+      reaction(() => getTagName(), tagName => {
+        const filter = this.getByType(FilterType.TAGNAME);
+        if (filter) {
+          this.removeFilter(filter); // search filter might occur once
+        }
+        if (tagName) {
+          this.addFilter({ type: FilterType.TAGNAME, value: tagName }, true);
         }
       }, {
         fireImmediately: true

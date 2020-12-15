@@ -37,7 +37,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
   rEnv(index: number) {
     return (
       <>
-        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+        <Grid container spacing={2} alignItems={"center"} direction={"row"} zeroMinWidth>
           <Grid item xs={11} direction={"row"} zeroMinWidth>
             <Grid container spacing={5} direction={"row"} zeroMinWidth>
               <Grid item xs zeroMinWidth>
@@ -69,6 +69,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
               small
               tooltip={_i18n._(t`Remove`)}
               className="remove-icon"
+              ripple="secondary"
               material="clear"
               onClick={(event) => {
                 this.remove(index);
@@ -89,10 +90,14 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
             <>
               <Trans>Environment</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                stopPropagation(event);
-                this.add()
-              }} small/>
+              <Icon
+                material="add_circle"
+                className="add_circle"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>

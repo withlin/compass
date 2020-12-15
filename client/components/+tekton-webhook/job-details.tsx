@@ -96,6 +96,7 @@ export class JobDetails extends React.Component<JobProps> {
                 tooltip={_i18n._(t`Remove`)}
                 className="remove-icon"
                 material="clear"
+                ripple="secondary"
                 onClick={(event) => {
                   this.remove(index);
                   stopPropagation(event);
@@ -117,10 +118,10 @@ export class JobDetails extends React.Component<JobProps> {
             <>
               <Trans>Job</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+              <Icon material={"add_circle"} className={"add_circle"} onClick={event => {
                 stopPropagation(event);
                 this.add()
-              }} small/>
+              }} />
             </>
           }>
         </SubTitle>

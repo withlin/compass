@@ -289,7 +289,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                 control={
                   <Switch
                     name="checkedA"
-                    color="primary"
+                    color="default"
                     checked={this.ifSwitch}
                     onChange={this.handleChange}
                   />

@@ -42,16 +42,20 @@ export class ArgsDetails extends React.Component<ArgsProps> {
             <>
               <Trans>Arguments</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} className={"editIcon"} onClick={event => {
-                this.add();
-                stopPropagation(event);
-              }} small/>
+              <Icon
+                material="add_circle"
+                className="add_circle"
+                onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }}
+              />
             </>
           }>
         </SubTitle>
         {this.value.map((item: any, index: number) => {
           return (
-            <Grid container spacing={5} alignItems={"center"} direction={"row"}>
+            <Grid container spacing={2} alignItems={"center"} direction={"row"}>
               <Grid item xs={11} zeroMinWidth>
                 <Input
                   className="item"
@@ -68,6 +72,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                   small
                   tooltip={_i18n._(t`Remove`)}
                   className="remove-icon"
+                  ripple="secondary"
                   material="clear"
                   onClick={(event) => {
                     this.remove(index);
